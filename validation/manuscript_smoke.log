@@ -1,0 +1,9 @@
+[33mNextflow 26.10.3 is available - Please consider updating your version to it(B[m
+N E X T F L O W  ~  version 25.10.2
+Launching `main.nf` [stoic_leavitt] DSL2 - revision: bd33321429
+[b3/182c84] Submitted process > SIMULATE
+[75/e0d31f] Submitted process > QC
+[a1/c9ce4a] Submitted process > LONGITUDINAL_INPUT
+[c7/b35a4e] Submitted process > ANALYSE_R
+[cc/ee4398] Submitted process > CROSSCHECK
+[33/286a32] Submitted process > REPORT

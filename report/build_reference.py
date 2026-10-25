@@ -14,6 +14,7 @@ for name in ['Normal','Body Text','Title','Subtitle','Heading 1','Heading 2','He
     st=d.styles[name];st.font.name='Calibri';st.font.color.rgb=RGBColor(0,0,0);st.font.size=Pt(11)
     st.paragraph_format.space_after=Pt(7)
 for name,size in [('Title',25),('Subtitle',14),('Heading 1',17),('Heading 2',15),('Heading 3',12),('Caption',9)]:d.styles[name].font.size=Pt(size)
+for name in ['Normal','Body Text']:d.styles[name].paragraph_format.space_after=Pt(5)
 st=d.styles.add_style('Table',WD_STYLE_TYPE.TABLE);st.font.name='Calibri';st.font.size=Pt(10)
 pr=OxmlElement('w:tblPr');b=OxmlElement('w:tblBorders')
 for edge in ['top','left','bottom','right','insideH','insideV']:

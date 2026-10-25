@@ -42,6 +42,14 @@ Initial report execution preceded completion of the rmarkdown dependency install
 
 The final Quarto report contains ten pages, nine figures and native Word equations. Every page was visually inspected after the final layout revision; title borders, table formatting and a detached caption were corrected before delivery. The full six-process graph subsequently resumed entirely from cache (`r_resume_trace.tsv`); the final smoke report also completed successfully. The README was rewritten as a research report, with mathematical methods and interpretation before each figure. All results remain explicitly labelled as synthetic.
 
+## Research manuscript reporting revision — 25 October 2026
+
+The Quarto source was reorganised to match the README's research-paper structure: Abstract, Introduction, Methods with mathematical specifications, Results, Discussion and Conclusion, followed by data availability and references. Vusumuzi Mabasa is named in the title block and Word author metadata, as confirmed by the author. Interpretations precede all nine figures. The title, opening statement and results explicitly identify the data as simulated; no affiliation or institutional endorsement was added.
+
+Report values and tables remain linked to the staged R outputs. The full and 40-worker workflows retained passing numerical comparisons, including explicit regression skips in the small cohort. Scientific analysis code and parameter values were unchanged. The document renderer again lacked LibreOffice, so Word COM export and Poppler were used for page-by-page visual verification. Execution logs and traces for this revision use the `manuscript_` prefix.
+
+The final manuscript has 15 pages, nine figures, 43 native Word equations and 9 tables. All 15 pages were visually inspected after the final render. The full run passed 23 comparisons and the smoke run passed 19; both final report tasks completed with exit code zero. The delivered Word file is byte-identical to the final full-run output.
+
 ## Runtime details for the historical Python report
 
 Nextflow 25.10.2 and OpenJDK 21.0.12.1 executed under Ubuntu 24.04 in WSL. A project-specific Python 3.13 environment at `/home/vusi/.venvs/occusurv-nf` contains the scientific dependencies listed in `python-lock.txt`. The complete workflow source, task work and outputs are on Toshiba at `D:/occusurv-nf` (`/mnt/toshiba/occusurv-nf` in the tested WSL session).

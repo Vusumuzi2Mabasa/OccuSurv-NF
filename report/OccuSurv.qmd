@@ -1,6 +1,7 @@
 ---
-title: Occupational exposure and respiratory disease surveillance
-subtitle: Statistical analysis and reproducibility report
+title: Occupational exposure and respiratory disease surveillance in a simulated cohort
+subtitle: A reproducible R and Nextflow analysis with Quarto reporting
+author: Vusumuzi Mabasa
 format:
   docx:
     reference-doc: reference.docx
@@ -13,152 +14,265 @@ execute:
 ```{r}
 library(jsonlite)
 library(knitr)
-a <- fromJSON('analysis/analysis.json')
-l <- fromJSON('longitudinal/summary.json')
-v <- fromJSON('crosscheck/summary.json')
-read <- function(p) read.csv(p,check.names=FALSE)
-tbl <- function(x,digits=3) kable(x,format='pipe',digits=digits,row.names=FALSE)
-hr <- function(p) {
+a<-fromJSON('analysis/analysis.json');l<-fromJSON('longitudinal/summary.json');v<-fromJSON('crosscheck/summary.json')
+read<-function(p)read.csv(p,check.names=FALSE)
+tbl<-function(x,digits=3)kable(x,format='pipe',digits=digits,row.names=FALSE)
+f<-function(x,d=3)formatC(x,format='f',digits=d)
+hr<-function(p){
  if(!file.exists(p))return(data.frame(Status='Skipped because fewer than 30 complete case events'))
- d<-read(p);data.frame(Term=d$term,HR=round(d$hr,3),`95 percent interval`=sprintf('%.3f to %.3f',d$lower,d$upper),P=signif(d$p,3),check.names=FALSE)
+ d<-read(p);data.frame(Covariate=d$term,HR=round(d$hr,3),`95 percent CI`=sprintf('%.3f to %.3f',d$lower,d$upper),P=signif(d$p,3),check.names=FALSE)
 }
+estimate<-function(path,term){
+ if(!file.exists(path))return('not estimated because the event threshold was not met')
+ d<-read(path);d<-d[d$term==term,];sprintf('HR %.3f (95%% CI %.3f to %.3f)',d$hr,d$lower,d$upper)
+}
+inc<-read('analysis/incidence.csv');prev<-read('analysis/prevalence.csv');t1<-read('analysis/table1.csv')
+ci<-read('longitudinal/cif_intervals.csv');end<-subset(ci,group=='Overall' & abs(time-8)<1e-8)
+checks<-read('crosscheck/comparison.csv')
 ```
 
-This report evaluates a reproducible occupational surveillance workflow using a synthetic cohort. It combines auditable quality control, exposure assessment, baseline survival analysis and a separate longitudinal competing-risk scenario. All observations and effect sizes are simulated; they do not estimate disease burden in any real workforce or imply NIOH endorsement.
+**Simulation study.** Every worker, measurement, diagnosis and death in this report is synthetic. Findings describe an assumed data-generating mechanism. They are not estimates of disease burden in South Africa, do not use NIOH records and imply no institutional endorsement.
 
-The baseline analysis retained **`r a$workers` workers**, with **`r a$events` incident diagnoses** over **`r round(a$person_years,1)` person-years**. The longitudinal scenario followed **`r l$subjects` workers**, with **`r l$disease` diagnoses** and **`r l$deaths` competing deaths**. R and Python agreed within prespecified numerical tolerances across **`r v$checks` comparisons**. This Word document is generated from executable Quarto source.
+# Abstract
 
-## Cohort and quality control
+**Background:** Occupational surveillance requires consistent handling of historical exposure, prevalent disease, follow-up and competing events. This study evaluates a reproducible analytical workflow under explicit simulation assumptions.
 
-Workers are allocated across construction, brick manufacture and stone fabrication. Age, employment duration, smoking and historical exposure are generated under fixed assumptions. Three noisy concentration measurements per worker support exposure summaries. Exact duplicate records are collapsed; conflicting identifiers fail validation. Eligibility, nonnegative concentrations, units, binary outcomes and follow-up chronology are checked. Missing smoking remains available for descriptive analyses but is excluded from regression.
+**Methods:** We generated `r a$truth$n_workers` workers across three industries and twelve workplaces. A baseline scenario evaluated prevalence, incidence and disease-free survival; a separate longitudinal scenario introduced annual exposure changes and competing death. R supplied descriptive estimates, Kaplan–Meier curves, baseline and time-varying cause-specific Cox models, and Aalen–Johansen cumulative incidence. Nextflow coordinated execution, Python independently recomputed estimates, and Quarto generated this report.
+
+**Results:** QC retained `r a$workers` workers. The baseline incident cohort contributed `r a$events` diagnoses over `r f(a$person_years,1)` person-years, giving `r f(inc$rate_per_1000[inc$industry=='Overall'],2)` diagnoses per 1,000 person-years. The longitudinal scenario included `r l$subjects` workers, `r l$disease` diagnoses and `r l$deaths` deaths. Eight-year cumulative incidence was `r f(end$cif[end$cause=='disease'])` for diagnosis and `r f(end$cif[end$cause=='death'])` for death. All `r v$checks` applicable numerical comparisons passed.
+
+**Conclusion:** The workflow produced consistent estimates and reproducible reporting for the tested synthetic records. Computational agreement does not establish real-world validity, causal effects, power or confidence-interval coverage.
+
+{{< pagebreak >}}
+
+# Introduction
+
+Occupational respiratory disease surveillance combines information measured on different timescales. Recent concentration measurements describe the monitoring period, whereas disease development may depend on historical exposure accumulated over many years. Prevalent disease must be distinguished from incident diagnoses, and workers contribute different amounts of observation time. Death can prevent a subsequent diagnosis, making the distinction between a cause-specific hazard and an absolute probability of disease particularly important.
+
+This study evaluates an analysis workflow in which those distinctions are explicit. Synthetic data permit known exposure effects, controlled censoring and deliberate data-quality defects, allowing the computational implementation to be examined without accessing identifiable worker records. The aim is to establish a transparent chain from source tables and QC decisions to statistical estimates, figures and a reproducible research report.
+
+Two scenarios are analysed. The first provides a baseline reference using fixed historical exposure. The second generates independent follow-up outcomes on the eligible disease-free workers and introduces time-varying exposure and competing mortality. It is a separate simulation scenario, not an extension of the original outcomes or a paired comparison of exposure interventions.
+
+# Methods
+
+## Study population and data generation
+
+The baseline sample comprised `r a$truth$n_workers` simulated workers allocated to construction, brick manufacture and stone fabrication across twelve workplaces. Age was generated uniformly between 25 and 65 years. Employment duration was the smaller of a Uniform(3,30) draw and age minus 18. Smoking was Bernoulli with probability 0.35. Historical concentration was lognormal, with industry medians of 0.04, 0.07 and 0.12 mg/m³, workplace log-scale SD 0.18 and worker log-scale SD 0.35. Each worker had three baseline measurements with multiplicative lognormal measurement error of SD 0.25.
+
+Workplace variation affected exposure but did not introduce unmeasured shared disease frailty. This assumption permits model-based inference conditional on the included covariates; it is not an assertion that real workers within a workplace are independent. The baseline and longitudinal generators used seeds `r a$truth$seed` and `r l$seed`. All effect sizes and event-rate parameters were assumed for this simulation rather than calibrated to empirical silicosis data.
+
+## Quality control and analysis populations
+
+Raw records were preserved. Exact duplicate worker records were collapsed; conflicting identifiers failed validation. QC checked required fields, identifier relationships, age and employment chronology, concentration units and nonnegative values, valid disease indicators, and follow-up within the eight-year observation window. Injected defects included an ineligible age, a duplicate row, negative follow-up, invalid measurements and missing smoking.
+
+Prevalence used all eligible workers. Incident analyses excluded baseline disease and invalid follow-up. Missing smoking was retained in descriptive summaries but excluded from regression. In the longitudinal scenario, intervals were required to be positive, contiguous and nonoverlapping, with a single terminal event or censoring time and no observation after an event. Exposure covariates had to agree with the historical schedule at interval entry. QC provenance and the row-level audit in the repository retain the decisions; audit reasons can overlap and are not counts of unique excluded workers.
+
+## Exposure definition and baseline outcome model
+
+For historical concentration $c_i$, employment duration $d_i$ and a five-year lag, cumulative exposure and its dimensionless transformation were
+
+$$
+C_i=c_i\max(d_i-5,0),\qquad x_i=\log_2(1+C_i/C_0),\qquad C_0=1\ \mathrm{mg\,year/m^3}.
+$$
+
+With $a_i=(\mathrm{age}_i-45)/10$ and smoking indicator $s_i$, the baseline generating model was
+
+$$
+h_i(t)=1.4(0.012)t^{0.4}\exp(\eta_i),\qquad
+\eta_i=\log(1.7)x_i+\log(1.3)a_i+\log(1.5)s_i.
+$$
+
+Event times were obtained by inverse transformation:
+
+$$
+T_i=\left[\frac{-\log U_i}{0.012\exp(\eta_i)}\right]^{1/1.4},\qquad U_i\sim\mathrm{Uniform}(0,1).
+$$
+
+Observed time was the minimum of diagnosis time and independent censoring, with censoring itself the minimum of eight years and an exponential draw of mean 25 years. Baseline disease probability was generated using $\operatorname{expit}(-3.4+0.5x_i+0.3a_i)$. Prevalent cases did not enter incident follow-up.
+
+## Descriptive estimation and baseline survival analysis
+
+For $k$ baseline cases among $n$ workers, prevalence was $\widehat p=k/n$, with Wilson 95% limits
+
+$$
+\frac{\widehat p+z^2/(2n)\ \pm\ z\sqrt{\widehat p(1-\widehat p)/n+z^2/(4n^2)}}{1+z^2/n},\qquad z=\Phi^{-1}(0.975).
+$$
+
+Incidence was $1000D/PY$, where $D$ is the diagnosis count and $PY$ the observed person-years. Exact Poisson bounds were
+
+$$
+\frac{1000}{2PY}\left[\chi^2_{2D,0.025},\ \chi^2_{2(D+1),0.975}\right],
+$$
+
+with lower bound zero when $D=0$. Kaplan–Meier survival used
+
+$$
+\widehat S(t)=\prod_{t_j\le t}\left(1-\frac{d_j}{n_j}\right),\qquad
+G(t)=\sum_{t_j\le t}\frac{d_j}{n_j(n_j-d_j)}.
+$$
+
+Here $n_j$ is the risk set and $d_j$ the diagnosis count at time $t_j$. Pointwise log-log intervals used Greenwood quantity $G(t)$ and the exact normal critical value. Bounds at survival zero or one were set explicitly to that boundary value.
+
+Cox regression included transformed exposure, age per decade and smoking. For cause $k$, the Breslow log partial likelihood was
+
+$$
+\ell_k(\beta)=\sum_j\left[\sum_{i\in D_{jk}}X_i(t_j)^T\beta-d_{jk}\log\left\{\sum_{i\in R(t_j)}\exp[X_i(t_j)^T\beta]\right\}\right].
+$$
+
+The baseline analysis used diagnosis as the sole event. Newton optimisation used the score $U$ and observed information $I$:
+
+$$
+\beta^{(m+1)}=\beta^{(m)}+I(\beta^{(m)})^{-1}U(\beta^{(m)}),\qquad
+\widehat V=I(\widehat\beta)^{-1}.
+$$
+
+Hazard ratios and Wald intervals were $\exp(\widehat\beta)$ and $\exp(\widehat\beta\pm z\sqrt{\widehat V_{kk}})$. Fits required finite coefficients and standard errors and maximum absolute score below $10^{-4}$. Each model required at least 30 complete-case events; this is a computational safeguard, not a sample-size or power calculation. P values are exploratory and unadjusted.
+
+Schoenfeld residuals were examined against log event time, with descriptive LOESS smoothing and rank correlations. R's `cox.zph` supplied a separate log-time scaled Schoenfeld score test. A non-significant test was not interpreted as proof of proportional hazards.
+
+## Time varying exposure and competing risk analysis
+
+At annual boundary $u$, the longitudinal exposure metric incorporated historical concentration and past annual concentrations $e_{im}$:
+
+$$
+C_i(u)=c_i\max\{d_i-\max(5-u,0),0\}+\sum_{m=0}^{u-6}e_{im}.
+$$
+
+The sum is empty when its upper limit is negative. Annual concentrations followed the historical concentration with lognormal variability of SD 0.25 and a factor of 0.65 from year three. The predictor $\log_2[1+C_i(u)/C_0]$ was held constant within each annual interval. Risk sets followed $(\mathrm{start},\mathrm{stop}]$, so at most one interval per worker contributed at each event time. Full planned schedules were stored as latent inputs, but post-event values entered neither risk sets nor observed exposure plots.
+
+Diagnosis and death had piecewise-constant baseline hazards of 0.018 and 0.025 per year. Their assumed exposure, age and smoking hazard ratios were $(1.7,1.3,1.5)$ and $(1.0,1.5,1.2)$ respectively. Waiting times were exponential with rate $h_1+h_2$; event cause was drawn with probability $h_k/(h_1+h_2)$. Follow-up ended at first diagnosis, death or independent censoring. Separate cause-specific Cox models used the interval data, with the alternative cause censored at its occurrence.
+
+Absolute diagnosis and death probabilities were estimated by Aalen–Johansen:
+
+$$
+\widehat F_k(t)=\sum_{t_j\le t}\widehat S(t_j-)\frac{d_{jk}}{n_j},\qquad
+\widehat S(t)=\prod_{t_j\le t}\left(1-\frac{d_{j1}+d_{j2}}{n_j}\right).
+$$
+
+Pointwise 95% percentile intervals used 200 whole-worker bootstrap samples within each displayed group, with R seed 2028. These are neither simultaneous bands nor workplace-cluster-robust intervals. Cause-specific hazard ratios describe instantaneous rates among event-free workers; they are not cumulative-incidence risk ratios or Fine–Gray subdistribution hazard ratios. No Fine–Gray model was fitted.
+
+## Software and numerical validation
+
+R estimated models and figures; Nextflow coordinated simulation, QC, Python cross-checks and Quarto reporting. Identical records and estimands were compared at absolute tolerances $10^{-7}$ for deterministic estimates and $10^{-12}$ for cumulative incidence, shared-sample bootstrap and harmonised Kaplan–Meier intervals. Failures stopped reporting.
+
+```{=openxml}
+<w:p><w:pPr><w:pStyle w:val="Heading1"/><w:pageBreakBefore/></w:pPr><w:r><w:t>Results</w:t></w:r></w:p>
+```
+
+## Cohort retention and exposure distributions
+
+QC retained `r a$workers` workers, with mean age `r f(t1$age_mean[1],1)` years (SD `r f(t1$age_sd[1],1)`). Smoking was observed for `r t1$smoking_observed[1]` workers and missing for `r t1$smoking_missing[1]`. Baseline disease occurred in `r a$prevalent_cases` workers: prevalence `r f(100*prev$prevalence[1],2)`% (Wilson 95% CI `r f(100*prev$lower[1],2)`% to `r f(100*prev$upper[1],2)`%).
 
 ```{r}
-tbl(data.frame(Measure=c('Eligible workers','Baseline cases','Incident cohort','Incident events','Person years','Complete case model events'),Value=c(a$workers,a$prevalent_cases,a$incident_cohort,a$events,round(a$person_years,1),a$model$events)))
+tbl(data.frame(Measure=c('Workers in follow-up','Diagnoses','Competing deaths','Person years','Complete case workers'),Baseline=c(a$incident_cohort,a$events,'Not generated',f(a$person_years,1),a$model$n),Longitudinal=c(l$subjects,l$disease,l$deaths,f(l$person_years,1),l$model_complete_subjects)))
 ```
 
-The incident baseline cohort excludes prevalent disease and invalid follow-up. The longitudinal scenario generates new outcomes on baseline disease-free workers, including workers whose original follow-up was invalid. These scenarios are not consecutive follow-up or paired counterfactual outcomes.
+Recent concentrations reflect the specified industry exposure distributions and measurement variability. They describe monitoring measurements rather than reconstructed lifetime exposure. The regression uses known historical exposure from the simulation. The two scenarios have different follow-up populations because longitudinal outcomes are newly generated, including for workers whose original follow-up was invalid.
+
+![Figure 1. Worker means of valid baseline concentrations in the simulated cohort.](figures/exposure.png){width=5.8in}
 
 {{< pagebreak >}}
 
-## Statistical specification
+## Crude incidence
 
-Historical concentration $c_i$ and employment duration $d_i$ define five-year lagged cumulative exposure. The reference unit is $C_0=1\,\mathrm{mg\,year/m^3}$:
+The baseline incident cohort experienced `r a$events` diagnoses over `r f(a$person_years,1)` person-years. The overall rate was `r f(inc$rate_per_1000[1],2)` per 1,000 person-years (95% CI `r f(inc$lower[1],2)` to `r f(inc$upper[1],2)`). Industry-specific estimates describe this realised sample and do not adjust for differences in covariate distributions. Their uncertainty limits comparisons between industries.
 
-$$C_i=c_i\max(d_i-5,0),\qquad x_i=\log_2(1+C_i/C_0).$$
+```{r}
+d<-subset(inc,industry!='Overall')
+tbl(data.frame(Industry=d$industry,Diagnoses=d$events,`Person years`=round(d$person_years,1),Rate=round(d$rate_per_1000,2),`95 percent CI`=sprintf('%.2f to %.2f',d$lower,d$upper),check.names=FALSE))
+```
 
-Baseline diagnosis times use a Weibull proportional-hazards generator, with $a_i=(\mathrm{age}_i-45)/10$ and smoking indicator $s_i$:
+Crude industry rankings need not match measured exposure rankings. They combine exposure, age, smoking, follow-up and random variation. These synthetic rates cannot be transported to an actual workforce.
 
-$$h_i(t)=1.4(0.012)t^{0.4}\exp(\eta_i),$$
-$$\eta_i=\log(1.7)x_i+\log(1.3)a_i+\log(1.5)s_i.$$
-
-Censoring is the minimum of eight years and an independent exponential draw with mean 25 years. Workplace effects influence exposure, with no unmeasured shared disease frailty. Conditional model-based covariance matches the simulation assumptions; real workplace clustering requires reassessment.
-
-Prevalence uses Wilson intervals. For $D$ diagnoses over $PY$ person-years, incidence is $1000D/PY$, with exact Poisson bounds:
-
-$$\frac{1000}{2PY}\left[\chi^2_{2D,0.025},\chi^2_{2(D+1),0.975}\right].$$
-
-The lower bound is zero when $D=0$. Kaplan–Meier survival is $\widehat S(t)=\prod_{t_j\le t}(1-d_j/n_j)$. Log-log intervals use Greenwood variance and the normal 97.5th percentile. These are pointwise intervals, not simultaneous bands.
-
-R `survival::coxph` maximises the Breslow partial likelihood. For cause $k$, event count $d_{jk}$ and event set $D_{jk}$:
-
-$$\ell_k(\beta)=\sum_j\left[\sum_{i\in D_{jk}}X_i(t_j)^T\beta-d_{jk}\log\sum_{i\in R(t_j)}e^{X_i(t_j)^T\beta}\right].$$
-
-Newton updates solve the score equations using observed information. We require finite coefficients and standard errors and a maximum absolute score below $10^{-4}$. Wald intervals use the normal critical value. Each model requires 30 complete-case cause-specific events; this computational guard is not a sample-size justification.
-
-{{< pagebreak >}}
-
-## Baseline exposure and incidence
-
-![Worker mean baseline exposure by industry.](figures/exposure.png){width=6.2in}
-
-![Crude incidence rates with exact Poisson intervals.](figures/incidence.png){width=6.2in}
-
-Exposure summaries use recent measurements. Regression instead uses known historical exposure in the simulation. Neither exposure measurement error nor industry-specific causal effects are addressed.
+![Figure 2. Crude diagnosis rates per 1000 person years with exact Poisson intervals.](figures/incidence.png){width=5.8in}
 
 {{< pagebreak >}}
 
 ## Baseline disease free survival
 
-![Kaplan Meier estimates with pointwise log-log intervals.](figures/km.png){width=6.2in}
-
-Workers at risk immediately before each displayed time
+The unadjusted survival curves describe time to diagnosis in the baseline scenario. Industry separation is descriptive and does not estimate an adjusted or causal contrast. Declining risk sets reduce information later in follow-up; independent censoring within each group is assumed.
 
 ```{r}
-risk<-read('analysis/risk_table.csv')
-wide<-reshape(risk,idvar='industry',timevar='time',direction='wide')
-names(wide)<-c('Industry','0 years','2 years','4 years','6 years','8 years')
-tbl(wide,digits=0)
+risk<-read('analysis/risk_table.csv');wide<-reshape(risk,idvar='industry',timevar='time',direction='wide')
+names(wide)<-c('Industry','0 years','2 years','4 years','6 years','8 years');tbl(wide,digits=0)
 ```
 
-Risk sets exclude workers after diagnosis or censoring. Administrative follow-up ends at eight years. The curves are descriptive and unadjusted; differences between industries are not causal estimates. Pointwise confidence intervals widen as information declines, and independent censoring is assumed within each industry.
+The table counts workers at risk immediately before each time. Administrative censoring occurs at eight years. The intervals in Figure 3 are pointwise, not simultaneous confidence bands.
+
+![Figure 3. Kaplan Meier estimates in simulated workers with log-log 95 percent intervals.](figures/km.png){width=5.8in}
 
 {{< pagebreak >}}
 
 ## Baseline adjusted associations
 
+The exposure association with diagnosis was `r estimate('analysis/cox.csv','log2_1plus_cumulative')`. Its generating HR was 1.7. The smoking association was `r estimate('analysis/cox.csv','smoker')`, with generating HR 1.5. Differences from those inputs represent sampling variation in this realisation and do not measure estimator bias.
+
 ```{r}
 tbl(hr('analysis/cox.csv'))
 ```
 
-The exposure hazard ratio describes a one-unit increase in $\log_2(1+C/C_0)$, not a doubling of raw concentration. Smoking is binary and age is per decade. The model uses complete cases and no automated variable selection. P values are exploratory and unadjusted.
+The exposure contrast is a one-unit increase in $\log_2(1+C/C_0)$, not a doubling of raw concentration. Age is per decade; smoking compares smokers with nonsmokers. All associations concern simulated observations, and P values are exploratory and unadjusted. A skipped model produces no effect estimate.
 
-![Adjusted hazard ratios. Orange crosses mark assumed generating effects.](figures/cox_forest.png){width=6.2in}
+![Figure 4. Baseline Cox estimates and Wald intervals with assumed effects marked by crosses.](figures/cox_forest.png){width=5.8in}
 
 {{< pagebreak >}}
 
 ## Proportional hazards diagnostics
 
-![Schoenfeld residuals against log event time with descriptive LOESS smoothing.](figures/ph_diagnostics.png){width=6.2in}
-
-Schoenfeld residuals subtract the risk-set weighted mean covariate from each event covariate. Correlations with log time and smooth trajectories are descriptive. R also supplies the scaled Schoenfeld score test using `cox.zph` with a log-time transform:
-
-```{r}
-if(file.exists('analysis/cox_zph.csv')) tbl(read('analysis/cox_zph.csv')) else cat('Diagnostics skipped because the regression event threshold was not met.')
+```{r results='asis'}
+if(file.exists('analysis/cox_zph.csv')) {
+ z<-read('analysis/cox_zph.csv');g<-z[z$term=='GLOBAL',]
+ cat(sprintf('The log-time proportional-hazards score test gave global chi-square %.3f with %d degrees of freedom and P=%.3f. This result does not prove proportional hazards or establish adequate sensitivity to detect violations.\n\n',g$chisq,g$df,g$p))
+} else cat('The proportional-hazards test was skipped because the regression event threshold was not met. No conclusion about model assumptions follows from this skip.\n\n')
 ```
 
-These tests cannot prove proportional hazards, particularly in small samples. Smoothing algorithms differ between Python and R; cross-checks assess the underlying residual rank correlations rather than identical smooth lines. The formal R test is a new diagnostic with no claimed Python counterpart.
+Schoenfeld residuals and their smooth trajectories are exploratory diagnostics. They are not fitted time-varying exposure effects. The R LOESS and archived Python LOWESS smooths need not coincide; numerical validation compares underlying residual rank correlations instead.
+
+```{r}
+if(file.exists('analysis/cox_zph.csv'))tbl(read('analysis/cox_zph.csv'))
+```
+
+![Figure 5. Schoenfeld residuals against log event time with descriptive LOESS curves.](figures/ph_diagnostics.png){width=5.8in}
 
 {{< pagebreak >}}
 
-## Time varying exposure and competing events
+## Longitudinal exposure histories
 
-At annual boundary $u$, historical exposure and earlier annual concentrations $e_{im}$ define predictable five-year lagged cumulative exposure:
+Annual concentration follows the specified reduction from year three, while the lagged cumulative metric admits earlier exposure as time advances. A decreasing current concentration can therefore coexist with increasing cumulative exposure. Later medians also reflect changes in the workers still observed.
 
-$$C_i(u)=c_i\max\{d_i-\max(5-u,0),0\}+\sum_{m=0}^{u-6}e_{im}.$$
+Under the five-year lag, the planned reduction has little or no effect on hazards during eight years of follow-up. Figure 6 must not be read as evidence of preventive efficacy. Full schedules are latent simulation inputs; post-event values are excluded from observed summaries and risk sets.
 
-The sum is empty when its upper limit is negative. Exposure is held constant within each annual interval. Risk sets use $(\mathrm{start},\mathrm{stop}]$, so only one interval per worker contributes at an event time. Follow-up ends at first diagnosis, death or censoring.
-
-Cause-specific hazards are piecewise constant. Diagnosis and death baseline hazards are 0.018 and 0.025 per year, with assumed exposure, age and smoking hazard ratios $(1.7,1.3,1.5)$ and $(1.0,1.5,1.2)$. Waiting time is exponential with rate $h_1+h_2$; event cause is drawn with probability $h_k/(h_1+h_2)$.
-
-![Annual concentration and lagged exposure among workers still observed.](longitudinal_figures/exposure_history.png){width=6.2in}
-
-The concentration reduction starts at year three. Under a five-year lag it has little or no effect within eight years. This scenario does not estimate preventive efficacy. Full schedules are latent simulation inputs; post-event values enter neither observed exposure plots nor analysis risk sets.
+![Figure 6. Annual concentration and lagged cumulative exposure among observed simulated workers.](longitudinal_figures/exposure_history.png){width=5.8in}
 
 {{< pagebreak >}}
 
 ## Cumulative incidence with competing death
 
-Aalen–Johansen estimation weights each cause's event fraction by survival free of either event:
-
-$$\widehat F_k(t)=\sum_{t_j\le t}\widehat S(t_j-)\frac{d_{jk}}{n_j},\qquad
-\widehat S(t)=\prod_{t_j\le t}\left(1-\frac{d_{j1}+d_{j2}}{n_j}\right).$$
-
-R `survfit` treats diagnosis and death as mutually exclusive absorbing states. Whole workers are resampled 200 times within each displayed group. Percentile 95% intervals are pointwise and assume independent workers; 200 replicates have appreciable Monte Carlo uncertainty. No Fine–Gray regression is fitted.
-
-![Aalen Johansen estimates and bootstrap intervals. Dashed curve is one minus Kaplan Meier with death censored.](longitudinal_figures/cumulative_incidence.png){width=6.2in}
+The longitudinal scenario produced `r l$disease` diagnoses and `r l$deaths` competing deaths among `r l$subjects` workers over `r f(l$person_years,1)` person-years. Estimated eight-year diagnosis probability was `r f(end$cif[end$cause=='disease'])`; competing-death probability was `r f(end$cif[end$cause=='death'])`.
 
 ```{r}
-ci<-read('longitudinal/cif_intervals.csv');end<-subset(ci,group=='Overall' & abs(time-8)<1e-8)
-tbl(end[c('cause','cif','lower','upper')])
+tbl(data.frame(Outcome=end$cause,`Cumulative incidence`=end$cif,`Lower 95 percent`=end$lower,`Upper 95 percent`=end$upper,check.names=FALSE))
 ```
 
-Cause-specific hazard ratios describe rates among workers free of either event; they are not cumulative-incidence risk ratios. Censoring competing deaths in one minus Kaplan–Meier estimates a different quantity and overstates diagnosis probability in this simulation.
+Treating death as ordinary censoring in one minus Kaplan–Meier estimates a different quantity and overstates observed diagnosis probability in the presence of competing death in this simulation. Aalen–Johansen retains the probability removed by either event. Bootstrap intervals are pointwise and assume independent workers.
+
+![Figure 7. Simulated diagnosis and death cumulative incidence with bootstrap intervals. Dashed curve is one minus Kaplan Meier with deaths censored.](longitudinal_figures/cumulative_incidence.png){width=5.8in}
 
 {{< pagebreak >}}
 
-## Longitudinal associations
+## Industry specific cumulative incidence
 
-![Cause-specific Cox estimates with time-varying exposure. Crosses show generating effects.](longitudinal_figures/time_varying_hr.png){width=6.2in}
+The industry curves reflect both diagnosis hazards and survival free of competing death. They are unadjusted summaries rather than estimates of industry effects. Uncertainty from limited event counts constrains their interpretation and does not support ranking real occupational risks.
+
+Each displayed group's interval comes from whole-worker resampling within that group. These are not simultaneous bands or intervals adjusted for workplace dependence. The simulation assumes no residual shared workplace frailty.
+
+![Figure 8. Unadjusted industry diagnosis probabilities in the simulated longitudinal cohort.](longitudinal_figures/cif_by_industry.png){width=5.8in}
+
+{{< pagebreak >}}
+
+## Time varying cause specific associations
+
+The exposure association with diagnosis was `r estimate('longitudinal/cox_cause1.csv','log2_1plus_lagged')`; its association with competing death was `r estimate('longitudinal/cox_cause2.csv','log2_1plus_lagged')`. Generating exposure HRs were 1.7 and 1.0 respectively. These rate associations among event-free workers are not absolute-risk ratios.
 
 Diagnosis model
 
@@ -172,23 +286,45 @@ Competing death model
 tbl(hr('longitudinal/cox_cause2.csv'))
 ```
 
-Both models use model-based information under independent workers and first-event follow-up. Repeated intervals do not represent independent recurrent events. The assumed effects are simulation inputs, not external reference estimates. Agreement with them in one realisation is not evidence of unbiased estimation or adequate power.
+Estimates below one do not establish protection. In particular, uncertainty in the smoking estimate must be interpreted against its positive generating effect and the limited number of outcomes. This single realisation cannot establish bias or coverage.
+
+![Figure 9. Time-varying cause-specific Cox estimates in simulated data. Crosses identify generating HRs.](longitudinal_figures/time_varying_hr.png){width=5.5in}
 
 {{< pagebreak >}}
 
-## Industry patterns and reproducibility
+## Computational validation
 
-![Unadjusted industry-specific disease cumulative incidence.](longitudinal_figures/cif_by_industry.png){width=6.2in}
-
-Nextflow orchestrates simulation, QC, R analysis, independent Python checks and Quarto rendering. Python simulation and QC are retained to preserve reference records. R produces statistical estimates and figures; Quarto executes R report chunks and converts equations into editable Word mathematics through Pandoc.
-
-Deterministic estimates use absolute tolerance $10^{-7}$; Aalen–Johansen and shared-index bootstrap intervals use $10^{-12}$. Kaplan–Meier bounds are independently recomputed in Python with the same exact normal quantile as R and compared at $10^{-12}$. The historical rounded $z=1.96$ table is retained for audit. Model-skip decisions must agree. Saved bootstrap indices make interval checks independent of language-specific random generators.
+All `r v$checks` applicable R–Python comparisons passed. The largest absolute difference was `r format(max(checks$max_abs_difference),scientific=TRUE,digits=3)`. The checks assess descriptive estimates, survival curves, fitted models where event counts permit, cumulative incidence and bootstrap bounds. Regression-skip decisions must agree between implementations.
 
 ```{r}
-checks<-read('crosscheck/comparison.csv')
-tbl(data.frame(Status=v$status,Comparisons=nrow(checks),`Largest absolute difference`=format(max(checks$max_abs_difference),scientific=TRUE,digits=3),check.names=FALSE))
+tbl(data.frame(Analysis=c('Baseline Cox','Diagnosis cause-specific Cox','Death cause-specific Cox'),Status=c(a$model$status,l$models$status)))
 ```
 
-This is one synthetic realisation, not a power, bias or coverage study. Assumptions include independent censoring, correctly specified effects, no unmeasured workplace frailty and accurate historical exposure. Complete-case regression does not correct missing-data bias. No national burden or causal intervention conclusions follow.
+The complete comparison table, tolerances and shared bootstrap indices are preserved with the results. R and Python use identical records and estimands. Historical rounded-normal KM intervals remain archived, while the current check independently recomputes the exact normal quantile used by R. This numerical agreement supports the tested calculations, not external validity of the underlying assumptions.
 
-Methods references: [R survival documentation](https://stat.ethz.ch/CRAN/web/packages/survival/refman/survival.html) for `coxph`, `survfit` and `cox.zph`; [Quarto Word documentation](https://quarto.org/docs/output-formats/ms-word.html). Full mathematical methods, version records and validation outputs accompany the repository.
+# Discussion
+
+The analysis demonstrates the importance of separating exposure measurement, historical exposure reconstruction, event rates and cumulative probabilities. Recent concentration summaries and crude industry incidence did not follow identical rankings in the realised sample. The adjusted regression and descriptive industry summaries answer different questions and should not be substituted for one another.
+
+The competing-risk scenario also shows why an exposure hazard ratio is insufficient to describe absolute disease probability. Diagnosis cumulative incidence depends on both the diagnosis hazard and survival free of competing death. The separation between Aalen–Johansen and one minus Kaplan–Meier is therefore a consequence of their different estimands, rather than a numerical disagreement between methods.
+
+The time-varying implementation preserves temporal ordering through annual covariates and explicit risk intervals. Nevertheless, the planned exposure reduction cannot establish an intervention effect: outcomes were not generated as paired counterfactuals, follow-up was short relative to the lag, and the simulation omitted time-varying confounding. Any causal interpretation would require a different design and estimand.
+
+Several limitations restrict interpretation. This is one small synthetic realisation, so it cannot establish bias, power or nominal interval coverage. Effects, exposure distributions and baseline rates were assumed. Historical exposure was known without reconstruction error; censoring was independent; missingness was generated under simplified assumptions; and unmeasured workplace frailty was absent. The 200-replicate bootstrap has Monte Carlo uncertainty and does not address workplace clustering. Complete-case regression may be unsuitable when missingness depends on unobserved exposure or disease. Healthy-worker selection, diagnostic error and informative loss to follow-up remain outside the current model.
+
+Independent R and Python agreement strengthens confidence in the implemented calculations, but both implementations share the scientific assumptions and estimands. It cannot validate those assumptions for an empirical study. Application to real surveillance data would require approved access, defensible case definitions, exposure-history evaluation, appropriate dependence modelling and external validation.
+
+# Conclusion
+
+OccuSurv-NF integrates QC, baseline survival analysis, time-varying exposure and competing risks within a reproducible Nextflow workflow. R generates the statistical results and figures, Python supplies independent numerical checks, and Quarto produces the Word report with editable equations and tables. The simulated examples passed the stated numerical and execution checks. Their contribution is a transparent, tested analytical implementation; they provide no empirical estimates of occupational disease burden or preventive effectiveness.
+
+# Data and code availability
+
+All committed observations are synthetic. The public repository provides the analysis code, simulation parameters, QC audit, figures, statistical tables, independent comparisons and executable Quarto source: [Vusumuzi2Mabasa OccuSurv NF](https://github.com/Vusumuzi2Mabasa/OccuSurv-NF). R and Python version records and Nextflow traces document the executed environment. The current report is generated from the staged analysis outputs, including when low event counts require regression to be skipped.
+
+# References
+
+- [R survival reference manual](https://stat.ethz.ch/CRAN/web/packages/survival/refman/survival.html), including Cox regression, multistate survival and proportional-hazards diagnostics.
+- [Statsmodels survival analysis](https://www.statsmodels.org/stable/duration.html), used for independent numerical checks.
+- [Quarto Word output](https://quarto.org/docs/output-formats/ms-word.html), used for executable reporting and native Word equations.
+- [Nextflow documentation](https://docs.seqera.io/nextflow/), used for workflow execution and provenance.
