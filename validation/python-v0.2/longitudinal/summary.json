@@ -1,0 +1,37 @@
+{
+  "scenario": "longitudinal competing events",
+  "seed": 2027,
+  "subjects": 477,
+  "intervals": 2743,
+  "disease": 93,
+  "deaths": 83,
+  "censored": 301,
+  "person_years": 2603.35523619287,
+  "model_complete_subjects": 462,
+  "models": [
+    {
+      "cause": 1,
+      "events": 89,
+      "subjects": 462,
+      "intervals": 2649,
+      "status": "fitted",
+      "score_max": 6.639133687258436e-14,
+      "warnings": [],
+      "covariance": "model-based counting-process information; independent workers",
+      "ties": "breslow"
+    },
+    {
+      "cause": 2,
+      "events": 80,
+      "subjects": 462,
+      "intervals": 2649,
+      "status": "fitted",
+      "score_max": 2.930988785010413e-14,
+      "warnings": [],
+      "covariance": "model-based counting-process information; independent workers",
+      "ties": "breslow"
+    }
+  ],
+  "bootstrap_replicates": 200,
+  "worker_sampling": "iid within each displayed group; no residual workplace frailty assumed"
+}

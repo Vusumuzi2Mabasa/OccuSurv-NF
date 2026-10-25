@@ -1,16 +1,16 @@
-industry,time,at_risk
-Brick manufacture,0,160
-Brick manufacture,2,138
-Brick manufacture,4,113
-Brick manufacture,6,86
-Brick manufacture,8,76
-Construction,0,160
-Construction,2,141
-Construction,4,120
-Construction,6,94
-Construction,8,72
-Stone fabrication,0,156
-Stone fabrication,2,140
-Stone fabrication,4,115
-Stone fabrication,6,98
-Stone fabrication,8,79
+"industry","time","at_risk"
+"Brick manufacture",0,160
+"Brick manufacture",2,138
+"Brick manufacture",4,113
+"Brick manufacture",6,86
+"Brick manufacture",8,76
+"Construction",0,160
+"Construction",2,141
+"Construction",4,120
+"Construction",6,94
+"Construction",8,72
+"Stone fabrication",0,156
+"Stone fabrication",2,140
+"Stone fabrication",4,115
+"Stone fabrication",6,98
+"Stone fabrication",8,79

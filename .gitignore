@@ -7,4 +7,6 @@ __pycache__/
 qa/
 local.config
 results-smoke/
+results-r/
+results-smoke-r/
 results/execution/*.html

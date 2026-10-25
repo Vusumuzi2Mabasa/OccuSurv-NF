@@ -28,7 +28,21 @@ The expanded suite passed all 26 tests (`extended_tests.txt`), including indepen
 
 This is one synthetic realisation and a small-data execution test, not a power, bias or coverage study. The 200-replicate worker bootstrap provides pointwise intervals under independent-worker assumptions. Neither Fine–Gray modelling nor remote HPC execution is claimed.
 
-## Runtime details
+## Version 0.3 R and Quarto conversion — 25 October 2026
+
+The production statistical implementation is now `bin/analyse.R`, using R 4.3.3, survival 3.5-8 and ggplot2 3.4.4. Quarto 1.10.19 executes `report/OccuSurv.qmd` and writes the Word report. Python simulation and QC remain unchanged; `validation/python-v0.2/` preserves the earlier numerical reference. R packages and session details are recorded in `R-packages.csv` and `results/analysis/R-sessionInfo.txt`.
+
+The full six-process run completed with exit code zero. All 23 independent numerical comparisons passed. Baseline Cox coefficients, standard errors, hazard ratios, bounds and P values differed by at most 7.8e-15; cause-specific comparisons differed by at most 4.7e-13. Aalen-Johansen estimates agreed within 5.4e-15 and shared-resample bootstrap bounds within 5.3e-16. The exact observed differences and tolerances are in `results/crosscheck/comparison.csv`.
+
+The 40-worker smoke run passed all 19 applicable comparisons. Baseline Cox and both cause-specific models were explicitly skipped below their event thresholds. The original 26 Python tests passed, and R checks passed for hand-computed AJ values, probability conservation, all-censored data and a start-stop likelihood with events exactly at interval boundaries. Full and smoke integrity checks passed (`r_integrity.txt`).
+
+During development, the smoke comparison detected that the historical rounded normal critical value 1.96 produces larger KM interval differences in small samples. Rather than relax tolerance, the cross-check now independently recomputes Python bounds with the exact normal quantile used by R and compares them at 1e-12. The original Python output is retained. Bootstrap samples are recorded explicitly so R and Python recompute exactly the same resamples; the R intervals can differ slightly from the archived v0.2 intervals because the historical RNG stream was different.
+
+Initial report execution preceded completion of the rmarkdown dependency installation and failed; it was rerun successfully after installation. The fs package required libuv development headers. Quarto was installed on the Linux filesystem after Toshiba extraction could not preserve executable metadata. No statistical failures were suppressed. Development and successful run logs are retained separately. The bundled document renderer lacked LibreOffice, so final visual verification used Microsoft Word export and bundled Poppler, as in earlier versions.
+
+The final Quarto report contains ten pages, nine figures and native Word equations. Every page was visually inspected after the final layout revision; title borders, table formatting and a detached caption were corrected before delivery. The full six-process graph subsequently resumed entirely from cache (`r_resume_trace.tsv`); the final smoke report also completed successfully. The README was rewritten as a research report, with mathematical methods and interpretation before each figure. All results remain explicitly labelled as synthetic.
+
+## Runtime details for the historical Python report
 
 Nextflow 25.10.2 and OpenJDK 21.0.12.1 executed under Ubuntu 24.04 in WSL. A project-specific Python 3.13 environment at `/home/vusi/.venvs/occusurv-nf` contains the scientific dependencies listed in `python-lock.txt`. The complete workflow source, task work and outputs are on Toshiba at `D:/occusurv-nf` (`/mnt/toshiba/occusurv-nf` in the tested WSL session).
 

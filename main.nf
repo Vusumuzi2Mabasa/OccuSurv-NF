@@ -3,77 +3,72 @@ params.n_workers=500
 params.seed=2026
 params.outdir='results'
 params.python='python3'
-params.report_python='python3'
-params.report_script="${projectDir}/bin/report.py"
+params.rscript='Rscript'
+params.quarto='quarto'
 process SIMULATE {
  publishDir "${params.outdir}", mode:'copy'
- input: path script
+ input: path source
  output: path 'raw'
  script:
  """
- ${params.python} ${script} --n ${params.n_workers} --seed ${params.seed} --out raw
+ ${params.python} ${source} --n ${params.n_workers} --seed ${params.seed} --out raw
  """
 }
 process QC {
  publishDir "${params.outdir}", mode:'copy'
- input: path raw; path script
+ input: path raw; path source
  output: path 'clean'
  script:
  """
- ${params.python} ${script} ${raw} --out clean
+ ${params.python} ${source} ${raw} --out clean
  """
 }
-process ANALYSE {
+process LONGITUDINAL_INPUT {
  publishDir "${params.outdir}", mode:'copy'
- input: path clean; path raw; path script
- output: path 'analysis'
+ input: path clean; path sources
+ output: path 'longitudinal_input'
  script:
  """
- ${params.python} ${script} ${clean} ${raw}/truth.json --out analysis
+ ${params.python} prepare_longitudinal.py ${clean}/workers.csv ${params.seed + 1}
  """
 }
-process FIGURES {
+process ANALYSE_R {
  publishDir "${params.outdir}", mode:'copy'
- input: path analysis; path script
- output: path 'figures'
+ input: path clean; path raw; path longitudinal_input; path source
+ output: path 'analysis', emit: analysis
+ path 'longitudinal', emit: longitudinal
+ path 'figures', emit: figures
+ path 'longitudinal_figures', emit: longitudinal_figures
  script:
  """
- ${params.python} ${script} ${analysis} --out figures
+ ${params.rscript} ${source} ${clean} ${raw} ${longitudinal_input}
  """
 }
-process LONGITUDINAL {
+process CROSSCHECK {
  publishDir "${params.outdir}", mode:'copy'
- input: path clean; path script
- output: path 'longitudinal'
+ input: path clean; path raw; path analysis; path longitudinal; path sources
+ output: path 'crosscheck'
  script:
  """
- ${params.python} ${script} ${clean}/workers.csv --seed ${params.seed + 1} --out longitudinal
- """
-}
-process LONGITUDINAL_FIGURES {
- publishDir "${params.outdir}", mode:'copy'
- input: path longitudinal; path script
- output: path 'longitudinal_figures'
- script:
- """
- ${params.python} ${script} ${longitudinal} --out longitudinal_figures
+ ${params.python} crosscheck.py ${clean} ${raw} ${analysis} ${longitudinal}
  """
 }
 process REPORT {
  publishDir "${params.outdir}", mode:'copy'
- input: path analysis; path clean; path figures; path methods; path equations; path report_source; path longitudinal; path longitudinal_figures
+ input: path analysis; path clean; path figures; path longitudinal; path longitudinal_figures; path crosscheck; path source; path reference
  output: path 'report'
  script:
  """
- ${params.report_python} ${params.report_script} --analysis analysis --clean clean --figures figures --methods methods.json --equations equations --out report --longitudinal longitudinal --longitudinal_figures longitudinal_figures
+ ${params.quarto} render ${source} --to docx --output OccuSurv_report.docx
+ mkdir report
+ mv OccuSurv_report.docx report/
  """
 }
 workflow {
  raw=SIMULATE(file("${projectDir}/bin/simulate.py"))
  clean=QC(raw,file("${projectDir}/bin/qc.py"))
- analysis=ANALYSE(clean,raw,file("${projectDir}/bin/analyse.py"))
- figures=FIGURES(analysis,file("${projectDir}/bin/figures.py"))
- longitudinal=LONGITUDINAL(clean,file("${projectDir}/bin/longitudinal.py"))
- longitudinal_figures=LONGITUDINAL_FIGURES(longitudinal,file("${projectDir}/bin/longitudinal_figures.py"))
- REPORT(analysis,clean,figures,file("${projectDir}/docs/methods.json"),file("${projectDir}/assets/equations"),file("${projectDir}/bin/report.py"),longitudinal,longitudinal_figures)
+ inputs=LONGITUDINAL_INPUT(clean,[file("${projectDir}/bin/prepare_longitudinal.py"),file("${projectDir}/bin/longitudinal.py")])
+ r=ANALYSE_R(clean,raw,inputs,file("${projectDir}/bin/analyse.R"))
+ check=CROSSCHECK(clean,raw,r.analysis,r.longitudinal,[file("${projectDir}/bin/crosscheck.py"),file("${projectDir}/bin/analyse.py"),file("${projectDir}/bin/longitudinal.py")])
+ REPORT(r.analysis,clean,r.figures,r.longitudinal,r.longitudinal_figures,check,file("${projectDir}/report/OccuSurv.qmd"),file("${projectDir}/report/reference.docx"))
 }

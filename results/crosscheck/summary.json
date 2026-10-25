@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "checks": 23,
+  "baseline_model": "fitted",
+  "cause_models": [
+    "fitted",
+    "fitted"
+  ],
+  "bootstrap": "identical R-generated worker indices recomputed by Python"
+}

@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "checks": 19,
+  "baseline_model": "skipped",
+  "cause_models": [
+    "skipped",
+    "skipped"
+  ],
+  "bootstrap": "identical R-generated worker indices recomputed by Python"
+}

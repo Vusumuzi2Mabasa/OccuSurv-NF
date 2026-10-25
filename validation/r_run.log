@@ -1,0 +1,54 @@
+[33mNextflow 26.10.3 is available - Please consider updating your version to it(B[m
+N E X T F L O W  ~  version 25.10.2
+Launching `main.nf` [loving_dalembert] DSL2 - revision: dc3a6e9f80
+[28/aa1509] Submitted process > SIMULATE
+[40/6352e1] Submitted process > QC
+[cb/1c1683] Submitted process > LONGITUDINAL_INPUT
+[b4/d20c9a] Submitted process > ANALYSE_R
+[ea/62a183] Submitted process > CROSSCHECK
+[2b/127cd5] Submitted process > REPORT
+ERROR ~ Error executing process > 'REPORT'
+
+Caused by:
+  Process `REPORT` terminated with an error exit status (1)
+
+
+Command executed:
+
+  /home/vusi/.local/opt/quarto-1.10.19/bin/quarto render OccuSurv.qmd --to docx --output OccuSurv_report.docx
+  mkdir report
+  mv OccuSurv_report.docx report/
+
+Command exit status:
+  1
+
+Command output:
+  (empty)
+
+Command error:
+  [31mError in loadNamespace(x) : there is no package called ‘rmarkdown’
+  Calls: loadNamespace -> withRestarts -> withOneRestart -> doWithOneRestart
+  Execution halted
+  [39mR installation:
+    Version: 4.3.3
+    Path: /usr/lib/R
+    LibPaths:
+      - /home/vusi/R/occusurv
+      - /usr/local/lib/R/site-library
+      - /usr/lib/R/site-library
+      - /usr/lib/R/library
+    knitr: 1.52
+    rmarkdown: (None)
+
+  The rmarkdown package is not available in this R installation.
+  Install with [1minstall.packages("rmarkdown")[22m
+
+  [33mWARN: Error encountered when rendering files[39m
+
+Work dir:
+  /mnt/toshiba/occusurv-nf/work/2b/127cd59f45b5750471b9109b880a77
+
+Tip: view the complete command output by changing to the process work dir and entering the command `cat .command.out`
+
+ -- Check '.nextflow.log' file for details
+WARN: Failed to render execution report -- see the log file for details

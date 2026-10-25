@@ -4,6 +4,16 @@ The original sections specify the baseline reference scenario. The longitudinal 
 
 All parameters below describe a synthetic data-generating mechanism. No NIOH observations are used.
 
+## R implementation and cross-language validation
+
+Version 0.3 uses R `survival::coxph` with Breslow ties, model-based covariance, `timefix=FALSE`, convergence tolerance 1e-10 and a 100-iteration limit. The maximum absolute sum of score residuals must be below 1e-4. `Surv(start, stop, event)` implements the left-open/right-closed risk intervals directly. The Python reference retains its nextafter entry adjustment. `survfit` supplies Kaplan–Meier and multistate Aalen–Johansen estimates. Boundary KM confidence limits at survival zero or one are explicitly set to the boundary value.
+
+The statistical estimands and simulated records below are unchanged. Full numerical comparisons use identical records and parameterisation. R-generated whole-worker bootstrap indices are stored and independently recomputed with Python, making agreement independent of RNG implementations. The 200-replicate R intervals use seed 2028; archived Python v0.2 intervals used a different RNG stream and can differ by Monte Carlo variation. Deterministic comparisons allow absolute difference 1e-7; AJ and shared-index bootstrap checks allow 1e-12. KM confidence limits are independently recomputed in Python using the exact normal critical value used by R and compared at 1e-12. The original rounded-1.96 Python table is retained for audit. Failures stop Nextflow before reporting.
+
+R `cox.zph(transform="log")` adds scaled Schoenfeld score tests for the baseline model. These tests are reported separately from the original descriptive residual correlations and have no claimed Python match. The R figure uses LOESS, while the archived Python plot used LOWESS; smoothing is descriptive and not required to match pointwise. The Word report is generated from `report/OccuSurv.qmd` by Quarto, with native Word equations rather than the historical equation-image assets.
+
+References: [R survival manual](https://stat.ethz.ch/CRAN/web/packages/survival/refman/survival.html), [Quarto Word output](https://quarto.org/docs/output-formats/ms-word.html).
+
 ## Exposure
 
 $$
@@ -66,7 +76,7 @@ $$
 \beta_{m+1}=\beta_m+I(\beta_m)^{-1}U(\beta_m),\quad V=I(\hat\beta)^{-1}
 $$
 
-Statsmodels maximises the partial likelihood by Newton optimisation, using score U and observed information I. We require a finite solution and maximum absolute score below 1e-4. V is model-based covariance, conditional on the specified covariates and independent workers.
+R survival and the Statsmodels reference maximise the partial likelihood by Newton optimisation, using score U and observed information I. We require a finite solution and maximum absolute score below 1e-4. V is model-based covariance, conditional on the specified covariates and independent workers.
 
 ## Hr
 
@@ -82,7 +92,7 @@ $$
 r_i=x_i-\frac{\sum_{j\in R(Y_i)}x_j\exp(x_j^T\hat\beta)}{\sum_{j\in R(Y_i)}\exp(x_j^T\hat\beta)}
 $$
 
-Schoenfeld residuals at event times are plotted against log time with LOWESS smoothing. Spearman correlations are descriptive only. These diagnostics are not a formal global proportional-hazards test and do not establish that proportional hazards holds.
+Schoenfeld residuals at event times are plotted against log time with LOESS smoothing in R (LOWESS in the archived Python implementation). Spearman correlations are descriptive only. Separately, version 0.3 reports formal log-time scaled Schoenfeld score tests via cox.zph. Neither plot nor non-significant test establishes that proportional hazards holds.
 
 ## Additional generating assumptions
 

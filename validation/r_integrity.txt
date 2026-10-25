@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "workers": 499,
+  "events": 137,
+  "model": "fitted",
+  "checks": [
+    "raw hashes unchanged",
+    "cohort eligibility",
+    "event counts",
+    "person time",
+    "rates",
+    "model gate",
+    "figures",
+    "Word report"
+  ]
+}
+PASS results-r: hashes, interval QC, counts, person-time, probability mass, monotonicity, confidence bounds, model gates, figures and report
+{
+  "status": "PASS",
+  "workers": 39,
+  "events": 13,
+  "model": "skipped",
+  "checks": [
+    "raw hashes unchanged",
+    "cohort eligibility",
+    "event counts",
+    "person time",
+    "rates",
+    "model gate",
+    "figures",
+    "Word report"
+  ]
+}
+PASS results-smoke-r: hashes, interval QC, counts, person-time, probability mass, monotonicity, confidence bounds, model gates, figures and report

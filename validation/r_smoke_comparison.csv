@@ -1,0 +1,20 @@
+check,max_abs_difference,tolerance,passed
+prevalence,3.0531133177191805e-16,1e-07,True
+incidence,5.258016244624741e-13,1e-07,True
+table1,4.973799150320701e-14,1e-07,True
+exposure means,4.0245584642661925e-16,1e-07,True
+KM estimates and risk sets,3.3306690738754696e-16,1e-07,True
+KM bounds with exact normal critical value,1.1102230246251565e-15,1e-12,True
+risk table,0.0,1e-07,True
+Overall Aalen Johansen,4.218847493575595e-15,1e-12,True
+Overall disease bootstrap,4.163336342344337e-16,1e-12,True
+Overall death bootstrap,3.3306690738754696e-16,1e-12,True
+Brick manufacture Aalen Johansen,4.218847493575595e-15,1e-12,True
+Brick manufacture disease bootstrap,2.7755575615628914e-16,1e-12,True
+Brick manufacture death bootstrap,3.3306690738754696e-16,1e-12,True
+Construction Aalen Johansen,3.552713678800501e-15,1e-12,True
+Construction disease bootstrap,2.498001805406602e-16,1e-12,True
+Construction death bootstrap,2.7755575615628914e-16,1e-12,True
+Stone fabrication Aalen Johansen,3.552713678800501e-15,1e-12,True
+Stone fabrication disease bootstrap,4.440892098500626e-16,1e-12,True
+Stone fabrication death bootstrap,3.3306690738754696e-16,1e-12,True

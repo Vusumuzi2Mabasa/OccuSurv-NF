@@ -2,4 +2,6 @@
 process.queue='REPLACE_PARTITION'
 process.clusterOptions='--account=REPLACE_ACCOUNT'
 // params.python='/shared/path/to/venv/bin/python'
-// params.report_python='/shared/path/to/venv/bin/python'
+// params.rscript='/shared/path/to/Rscript'
+// params.quarto='/shared/path/to/quarto'
+// env.R_LIBS_USER='/shared/path/to/R/library'

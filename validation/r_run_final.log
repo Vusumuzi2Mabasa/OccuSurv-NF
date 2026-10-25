@@ -1,0 +1,9 @@
+[33mNextflow 26.10.3 is available - Please consider updating your version to it(B[m
+N E X T F L O W  ~  version 25.10.2
+Launching `main.nf` [mad_marconi] DSL2 - revision: dc3a6e9f80
+[19/ab78d3] Submitted process > SIMULATE
+[d9/91d7af] Submitted process > QC
+[f5/377c35] Submitted process > LONGITUDINAL_INPUT
+[54/ce3ce4] Submitted process > ANALYSE_R
+[01/e6fa67] Submitted process > CROSSCHECK
+[12/395ffc] Submitted process > REPORT

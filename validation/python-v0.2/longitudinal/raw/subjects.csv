@@ -1,0 +1,478 @@
+worker_id,industry,time,cause,smoker
+W0001,Construction,1.1599591786439793,1,0.0
+W0003,Stone fabrication,0.2340390648621467,1,0.0
+W0004,Stone fabrication,7.699943733225228,0,0.0
+W0005,Stone fabrication,8.0,0,
+W0006,Brick manufacture,3.717375043922079,1,1.0
+W0007,Stone fabrication,0.7088317816113082,2,0.0
+W0008,Stone fabrication,4.347334964450424,1,0.0
+W0009,Stone fabrication,0.38717431324221435,2,0.0
+W0010,Brick manufacture,4.8592187432760685,1,1.0
+W0011,Construction,8.0,0,1.0
+W0012,Stone fabrication,2.843484738394258,1,
+W0013,Construction,8.0,0,1.0
+W0014,Brick manufacture,8.0,0,0.0
+W0015,Stone fabrication,0.1031468265793731,1,1.0
+W0016,Stone fabrication,1.8104952441288282,2,1.0
+W0017,Brick manufacture,7.629546830158309,0,0.0
+W0018,Brick manufacture,2.335356254652563,2,
+W0019,Stone fabrication,2.3076264909426025,0,1.0
+W0020,Construction,5.492001992022186,2,1.0
+W0021,Brick manufacture,8.0,0,1.0
+W0023,Construction,8.0,0,1.0
+W0024,Construction,6.043069425380385,0,0.0
+W0025,Brick manufacture,4.878825578215071,2,0.0
+W0026,Stone fabrication,2.6977281855369952,2,1.0
+W0027,Stone fabrication,8.0,0,0.0
+W0028,Stone fabrication,5.89722039094276,1,0.0
+W0029,Stone fabrication,2.316136157087858,0,0.0
+W0030,Construction,0.4065801958869267,0,0.0
+W0031,Construction,8.0,0,0.0
+W0032,Brick manufacture,8.0,0,0.0
+W0033,Brick manufacture,3.2289693438193594,1,1.0
+W0034,Construction,7.500706378759482,2,1.0
+W0035,Construction,2.2838234313982517,0,0.0
+W0036,Construction,4.266163787814969,1,1.0
+W0037,Stone fabrication,8.0,0,0.0
+W0038,Brick manufacture,8.0,0,0.0
+W0039,Brick manufacture,8.0,0,0.0
+W0040,Brick manufacture,6.794094320837947,1,0.0
+W0041,Brick manufacture,8.0,0,1.0
+W0042,Brick manufacture,8.0,0,0.0
+W0043,Construction,2.003715357301323,1,0.0
+W0044,Stone fabrication,1.0310528267165109,1,0.0
+W0045,Stone fabrication,2.8051415351223508,1,1.0
+W0046,Brick manufacture,8.0,0,0.0
+W0047,Construction,8.0,0,0.0
+W0048,Brick manufacture,3.5263767664099626,1,0.0
+W0049,Construction,1.3225200172047482,0,0.0
+W0050,Brick manufacture,7.62242354139076,0,0.0
+W0051,Stone fabrication,2.4961939798457395,0,0.0
+W0052,Construction,8.0,0,0.0
+W0053,Brick manufacture,5.446008827321817,0,0.0
+W0054,Stone fabrication,8.0,0,0.0
+W0055,Construction,8.0,0,0.0
+W0056,Brick manufacture,8.0,0,0.0
+W0057,Brick manufacture,1.4434594295213774,0,0.0
+W0058,Stone fabrication,1.2699732965702517,1,0.0
+W0059,Stone fabrication,8.0,0,1.0
+W0060,Construction,8.0,0,0.0
+W0061,Construction,8.0,0,0.0
+W0062,Construction,8.0,0,0.0
+W0063,Stone fabrication,4.757438188615021,0,0.0
+W0064,Brick manufacture,8.0,0,1.0
+W0065,Brick manufacture,8.0,0,0.0
+W0066,Stone fabrication,8.0,0,1.0
+W0067,Stone fabrication,5.972734427389358,0,0.0
+W0068,Stone fabrication,6.815001158323909,0,0.0
+W0069,Brick manufacture,2.0541415928219133,1,1.0
+W0070,Construction,8.0,0,1.0
+W0071,Construction,8.0,0,0.0
+W0072,Stone fabrication,8.0,0,1.0
+W0073,Construction,8.0,0,1.0
+W0074,Brick manufacture,8.0,0,0.0
+W0075,Construction,2.4509776580705496,0,0.0
+W0076,Construction,4.680744927952329,1,0.0
+W0077,Stone fabrication,8.0,0,0.0
+W0078,Construction,2.823364579050183,1,1.0
+W0079,Stone fabrication,3.8028514950671504,1,0.0
+W0080,Brick manufacture,0.9634057571135715,1,1.0
+W0081,Stone fabrication,0.14743814710006434,0,1.0
+W0082,Construction,5.207119868417535,1,1.0
+W0083,Brick manufacture,8.0,0,0.0
+W0084,Stone fabrication,8.0,0,0.0
+W0085,Stone fabrication,2.0316192347527884,0,0.0
+W0086,Construction,2.3242696466026307,2,0.0
+W0087,Stone fabrication,2.718713834988207,0,0.0
+W0088,Stone fabrication,3.1097170764050484,1,0.0
+W0089,Stone fabrication,8.0,0,0.0
+W0090,Brick manufacture,3.8356000472348324,2,0.0
+W0091,Stone fabrication,8.0,0,1.0
+W0092,Construction,8.0,0,0.0
+W0093,Brick manufacture,8.0,0,0.0
+W0094,Construction,8.0,0,1.0
+W0095,Construction,4.863681469471511,1,1.0
+W0096,Brick manufacture,0.019528001020703626,2,1.0
+W0097,Brick manufacture,4.684610053745493,0,1.0
+W0098,Stone fabrication,2.823377902894357,1,1.0
+W0099,Construction,8.0,0,1.0
+W0100,Brick manufacture,8.0,0,0.0
+W0101,Stone fabrication,8.0,0,1.0
+W0102,Stone fabrication,5.233491074282327,1,0.0
+W0103,Brick manufacture,5.346686682417904,1,0.0
+W0104,Stone fabrication,0.4633393407273463,0,1.0
+W0105,Stone fabrication,8.0,0,1.0
+W0106,Construction,4.7811990982067085,0,0.0
+W0107,Brick manufacture,8.0,0,1.0
+W0108,Construction,2.4227909286155125,0,0.0
+W0109,Brick manufacture,8.0,0,0.0
+W0110,Stone fabrication,3.4175615998084994,1,0.0
+W0112,Construction,8.0,0,0.0
+W0113,Construction,3.821708706459523,1,0.0
+W0115,Construction,1.4795823439523719,1,0.0
+W0116,Stone fabrication,8.0,0,1.0
+W0117,Brick manufacture,8.0,0,0.0
+W0118,Construction,6.416860270437764,2,0.0
+W0119,Construction,8.0,0,0.0
+W0120,Construction,8.0,0,1.0
+W0121,Construction,3.001290151085703,2,0.0
+W0122,Brick manufacture,3.5705883163189265,1,1.0
+W0123,Stone fabrication,3.9795421795491728,1,
+W0124,Brick manufacture,2.250587532829579,2,1.0
+W0125,Brick manufacture,8.0,0,1.0
+W0126,Construction,8.0,0,1.0
+W0127,Stone fabrication,3.9558120732499407,2,0.0
+W0128,Stone fabrication,8.0,0,1.0
+W0129,Brick manufacture,1.3569367607862124,2,0.0
+W0130,Brick manufacture,8.0,0,1.0
+W0131,Stone fabrication,0.5045072697784893,2,0.0
+W0132,Stone fabrication,8.0,0,1.0
+W0133,Stone fabrication,0.0671651970150731,2,0.0
+W0134,Construction,4.172450537726967,0,0.0
+W0135,Stone fabrication,8.0,0,0.0
+W0136,Stone fabrication,8.0,0,0.0
+W0137,Stone fabrication,5.341722335117334,2,
+W0139,Brick manufacture,8.0,0,1.0
+W0140,Stone fabrication,0.28430782575618296,0,1.0
+W0141,Construction,3.7795801366290376,1,1.0
+W0142,Stone fabrication,0.9700810765772953,0,0.0
+W0143,Brick manufacture,8.0,0,1.0
+W0144,Brick manufacture,3.643920760500815,0,0.0
+W0146,Construction,2.752812194107683,0,0.0
+W0147,Stone fabrication,8.0,0,0.0
+W0148,Brick manufacture,5.028798133011808,2,1.0
+W0149,Construction,1.868264669100964,2,1.0
+W0150,Construction,4.418608561796086,0,0.0
+W0151,Stone fabrication,8.0,0,1.0
+W0152,Brick manufacture,8.0,0,0.0
+W0153,Construction,8.0,0,0.0
+W0154,Brick manufacture,2.5951327975126417,2,1.0
+W0155,Brick manufacture,3.021895656141675,0,0.0
+W0156,Stone fabrication,8.0,0,0.0
+W0157,Construction,8.0,0,0.0
+W0158,Construction,0.33335648086022396,1,1.0
+W0159,Stone fabrication,8.0,0,0.0
+W0160,Stone fabrication,1.679499918097179,2,0.0
+W0161,Brick manufacture,8.0,0,1.0
+W0162,Construction,1.0520840357246477,2,0.0
+W0163,Construction,3.594086602214605,1,0.0
+W0164,Construction,8.0,0,0.0
+W0165,Brick manufacture,8.0,0,0.0
+W0166,Construction,8.0,0,0.0
+W0167,Stone fabrication,7.305056755978632,2,1.0
+W0168,Brick manufacture,4.255615508491621,2,0.0
+W0169,Construction,0.5677155654983072,0,1.0
+W0170,Construction,4.15098412492041,1,1.0
+W0171,Stone fabrication,5.583663700412147,2,0.0
+W0172,Brick manufacture,2.265838564518757,2,0.0
+W0173,Construction,7.891873296822938,1,1.0
+W0174,Brick manufacture,0.8618241121224741,0,0.0
+W0175,Brick manufacture,1.6043924069865623,1,0.0
+W0176,Construction,8.0,0,0.0
+W0177,Construction,8.0,0,1.0
+W0178,Construction,8.0,0,0.0
+W0179,Construction,0.7805733735893351,2,0.0
+W0180,Construction,3.267711617452821,1,1.0
+W0181,Brick manufacture,5.312360680499329,2,1.0
+W0182,Brick manufacture,8.0,0,0.0
+W0183,Stone fabrication,2.6852067731738845,1,1.0
+W0184,Construction,1.0801537272634638,1,1.0
+W0185,Construction,8.0,0,1.0
+W0186,Stone fabrication,5.799819745418436,1,0.0
+W0187,Construction,8.0,0,1.0
+W0188,Stone fabrication,8.0,0,1.0
+W0189,Brick manufacture,8.0,0,
+W0190,Construction,2.1503800612371604,2,0.0
+W0191,Stone fabrication,6.624404512117802,0,0.0
+W0192,Stone fabrication,8.0,0,0.0
+W0193,Stone fabrication,8.0,0,0.0
+W0194,Construction,8.0,0,0.0
+W0195,Brick manufacture,1.1599392782441447,2,1.0
+W0196,Brick manufacture,8.0,0,0.0
+W0197,Construction,8.0,0,0.0
+W0198,Brick manufacture,2.3578805553321915,0,0.0
+W0199,Construction,0.9124078170318202,0,1.0
+W0200,Brick manufacture,8.0,0,0.0
+W0201,Construction,0.11493742895634941,0,0.0
+W0202,Brick manufacture,8.0,0,0.0
+W0203,Brick manufacture,8.0,0,0.0
+W0204,Construction,8.0,0,0.0
+W0205,Brick manufacture,0.5075534210581172,1,0.0
+W0206,Construction,5.319458343642431,0,0.0
+W0207,Construction,8.0,0,0.0
+W0208,Brick manufacture,2.3472582419194623,1,1.0
+W0209,Construction,4.585692141034625,2,0.0
+W0210,Brick manufacture,3.541147664334503,2,0.0
+W0211,Brick manufacture,5.632230966943099,0,1.0
+W0212,Construction,8.0,0,0.0
+W0213,Construction,8.0,0,1.0
+W0214,Brick manufacture,5.50798053445221,0,0.0
+W0215,Stone fabrication,0.4228743985550333,1,0.0
+W0216,Brick manufacture,0.6746330768603916,2,1.0
+W0217,Brick manufacture,8.0,0,0.0
+W0218,Stone fabrication,8.0,0,0.0
+W0219,Construction,2.6152034741304466,1,0.0
+W0220,Stone fabrication,8.0,0,0.0
+W0221,Stone fabrication,8.0,0,0.0
+W0222,Stone fabrication,4.09914603263659,0,0.0
+W0223,Construction,8.0,0,0.0
+W0224,Brick manufacture,8.0,0,1.0
+W0225,Stone fabrication,8.0,0,0.0
+W0226,Stone fabrication,4.206120444580631,1,0.0
+W0227,Stone fabrication,8.0,0,1.0
+W0228,Brick manufacture,8.0,0,0.0
+W0229,Stone fabrication,2.6955186861532026,1,1.0
+W0230,Stone fabrication,8.0,0,1.0
+W0231,Construction,0.5377327221960567,0,1.0
+W0232,Construction,0.08825103490672087,1,0.0
+W0234,Stone fabrication,0.5315285499392993,2,0.0
+W0235,Brick manufacture,3.918018270268174,1,1.0
+W0236,Stone fabrication,6.591797726869048,1,0.0
+W0237,Stone fabrication,6.5808162066128455,1,0.0
+W0238,Brick manufacture,0.7648996743524773,2,0.0
+W0239,Stone fabrication,8.0,0,0.0
+W0240,Stone fabrication,8.0,0,1.0
+W0241,Construction,7.183958880005815,1,0.0
+W0242,Stone fabrication,6.692839389291329,0,0.0
+W0243,Stone fabrication,7.348082186325819,2,1.0
+W0244,Brick manufacture,8.0,0,1.0
+W0245,Brick manufacture,8.0,0,0.0
+W0246,Brick manufacture,8.0,0,1.0
+W0247,Stone fabrication,2.353560116660127,1,
+W0248,Brick manufacture,8.0,0,1.0
+W0249,Brick manufacture,5.802126966492162,2,0.0
+W0250,Brick manufacture,8.0,0,0.0
+W0251,Construction,8.0,0,1.0
+W0253,Brick manufacture,4.910782337827623,0,0.0
+W0254,Stone fabrication,6.6980085297606,2,0.0
+W0255,Stone fabrication,8.0,0,1.0
+W0256,Stone fabrication,1.4201258242981483,2,0.0
+W0257,Brick manufacture,5.589818971647237,2,0.0
+W0258,Stone fabrication,4.357671686172619,1,0.0
+W0259,Brick manufacture,8.0,0,0.0
+W0261,Stone fabrication,4.921439258648986,0,0.0
+W0262,Construction,4.2564651048654385,2,0.0
+W0263,Stone fabrication,3.0597174457549134,1,
+W0264,Stone fabrication,8.0,0,0.0
+W0265,Brick manufacture,3.8189742629819508,1,1.0
+W0266,Construction,8.0,0,1.0
+W0267,Brick manufacture,7.439378758725732,2,0.0
+W0268,Stone fabrication,5.536118856598536,1,1.0
+W0269,Stone fabrication,8.0,0,1.0
+W0270,Stone fabrication,7.86819417013774,2,0.0
+W0271,Construction,8.0,0,0.0
+W0272,Brick manufacture,0.08169873186095863,0,0.0
+W0273,Construction,3.877689715035133,2,0.0
+W0274,Stone fabrication,7.70155398464484,2,0.0
+W0275,Stone fabrication,8.0,0,0.0
+W0276,Brick manufacture,3.6976977351029694,0,0.0
+W0277,Construction,2.782748861251742,0,1.0
+W0278,Stone fabrication,0.06003587788027324,1,1.0
+W0279,Brick manufacture,0.7033063158209936,1,0.0
+W0280,Construction,2.8320811810564455,0,1.0
+W0281,Stone fabrication,8.0,0,0.0
+W0282,Stone fabrication,8.0,0,0.0
+W0283,Construction,5.9922211151291,2,0.0
+W0284,Construction,8.0,0,0.0
+W0285,Stone fabrication,8.0,0,0.0
+W0286,Construction,4.199277367947611,2,1.0
+W0287,Construction,3.168779699448687,0,0.0
+W0288,Stone fabrication,8.0,0,0.0
+W0289,Stone fabrication,8.0,0,0.0
+W0290,Brick manufacture,8.0,0,0.0
+W0291,Brick manufacture,1.514347909082702,1,0.0
+W0292,Brick manufacture,8.0,0,1.0
+W0293,Brick manufacture,8.0,0,0.0
+W0294,Stone fabrication,8.0,0,1.0
+W0295,Construction,3.650711590364584,2,0.0
+W0297,Stone fabrication,1.6430192850837089,0,1.0
+W0298,Stone fabrication,8.0,0,1.0
+W0299,Stone fabrication,8.0,0,0.0
+W0300,Construction,2.100823344090288,1,0.0
+W0301,Construction,8.0,0,1.0
+W0302,Construction,8.0,0,0.0
+W0303,Brick manufacture,8.0,0,0.0
+W0304,Brick manufacture,6.399572635672647,0,0.0
+W0305,Construction,7.834541461149526,0,0.0
+W0306,Stone fabrication,1.0885774747378216,2,0.0
+W0308,Brick manufacture,3.777096954255119,0,1.0
+W0309,Stone fabrication,0.02385903548540353,1,0.0
+W0310,Brick manufacture,4.117975716390286,0,1.0
+W0311,Brick manufacture,7.393137155685335,0,0.0
+W0312,Brick manufacture,0.2196796838235458,0,1.0
+W0313,Brick manufacture,8.0,0,1.0
+W0314,Brick manufacture,8.0,0,0.0
+W0315,Brick manufacture,5.069271912221296,0,0.0
+W0316,Stone fabrication,3.2757765392817406,1,1.0
+W0317,Construction,4.63383533646388,0,0.0
+W0318,Stone fabrication,3.6629057754717143,1,1.0
+W0319,Stone fabrication,0.011558207804961768,0,1.0
+W0320,Brick manufacture,8.0,0,1.0
+W0322,Stone fabrication,8.0,0,0.0
+W0323,Construction,0.5861426110383561,0,0.0
+W0324,Stone fabrication,4.427847544605947,0,0.0
+W0325,Stone fabrication,6.802369205864439,1,1.0
+W0326,Brick manufacture,3.9838783346716684,0,0.0
+W0327,Construction,4.827307884639498,2,0.0
+W0328,Construction,8.0,0,0.0
+W0329,Construction,1.5503344719464573,0,0.0
+W0330,Stone fabrication,8.0,0,1.0
+W0331,Construction,3.0917338896039275,1,1.0
+W0332,Brick manufacture,8.0,0,0.0
+W0334,Brick manufacture,1.2137442947874089,1,0.0
+W0335,Stone fabrication,7.321178580983462,0,0.0
+W0336,Stone fabrication,8.0,0,0.0
+W0338,Stone fabrication,5.279695025406013,0,1.0
+W0339,Construction,5.789348098256188,0,0.0
+W0340,Stone fabrication,2.608970653311271,2,0.0
+W0341,Construction,0.07482665039325481,2,0.0
+W0342,Brick manufacture,6.134677437495249,2,0.0
+W0343,Brick manufacture,3.8038723902747233,2,1.0
+W0344,Stone fabrication,0.14613744703906215,2,0.0
+W0345,Brick manufacture,8.0,0,0.0
+W0346,Construction,8.0,0,1.0
+W0347,Construction,8.0,0,1.0
+W0348,Construction,1.015233424830458,0,0.0
+W0349,Construction,8.0,0,0.0
+W0350,Construction,8.0,0,0.0
+W0351,Brick manufacture,8.0,0,0.0
+W0352,Construction,8.0,0,0.0
+W0353,Construction,1.669090983167151,1,0.0
+W0354,Brick manufacture,8.0,0,1.0
+W0355,Construction,8.0,0,0.0
+W0356,Brick manufacture,7.659931472253237,0,0.0
+W0357,Construction,3.259976965909032,1,0.0
+W0358,Brick manufacture,8.0,0,0.0
+W0359,Construction,7.340608902017373,0,0.0
+W0360,Construction,3.166659588136214,2,1.0
+W0361,Construction,8.0,0,1.0
+W0362,Brick manufacture,8.0,0,1.0
+W0363,Construction,8.0,0,0.0
+W0364,Brick manufacture,8.0,0,1.0
+W0365,Stone fabrication,5.481455392312915,2,1.0
+W0366,Construction,8.0,0,0.0
+W0367,Construction,4.638503442334116,1,0.0
+W0368,Construction,5.883852883740307,1,0.0
+W0369,Stone fabrication,8.0,0,0.0
+W0370,Brick manufacture,3.4895199683953577,0,1.0
+W0371,Construction,8.0,0,
+W0372,Construction,7.4700810585918305,1,0.0
+W0373,Brick manufacture,8.0,0,1.0
+W0374,Brick manufacture,5.25857346745207,2,0.0
+W0375,Stone fabrication,4.569711966909647,2,0.0
+W0376,Construction,7.059273323407296,0,0.0
+W0377,Construction,8.0,0,0.0
+W0378,Construction,4.565580578409705,0,0.0
+W0379,Brick manufacture,4.240381466793942,2,0.0
+W0380,Stone fabrication,6.738108092878334,2,
+W0381,Construction,4.960846808496163,0,0.0
+W0382,Construction,8.0,0,0.0
+W0383,Stone fabrication,5.318544452087357,0,1.0
+W0384,Construction,8.0,0,1.0
+W0385,Construction,3.94963544828697,0,0.0
+W0387,Brick manufacture,8.0,0,1.0
+W0388,Stone fabrication,8.0,0,0.0
+W0389,Stone fabrication,8.0,0,
+W0390,Stone fabrication,4.807891200450512,1,1.0
+W0393,Brick manufacture,8.0,0,0.0
+W0394,Brick manufacture,6.451844340055173,0,0.0
+W0395,Brick manufacture,4.245683494563384,1,1.0
+W0396,Stone fabrication,8.0,0,
+W0397,Brick manufacture,1.2446637405435597,0,0.0
+W0398,Brick manufacture,1.5942355494267617,2,1.0
+W0399,Stone fabrication,8.0,0,1.0
+W0400,Construction,6.069888763919457,0,1.0
+W0401,Stone fabrication,5.163574167092119,1,0.0
+W0403,Construction,0.00839800093952587,1,1.0
+W0404,Construction,8.0,0,0.0
+W0405,Brick manufacture,1.4992923617472163,2,1.0
+W0406,Stone fabrication,8.0,0,1.0
+W0408,Construction,6.553224977107293,0,0.0
+W0409,Brick manufacture,5.221341826884061,0,1.0
+W0410,Brick manufacture,0.17183309340905328,2,1.0
+W0411,Construction,8.0,0,0.0
+W0412,Brick manufacture,2.0543190418110022,1,0.0
+W0413,Brick manufacture,2.0206683750871894,0,0.0
+W0414,Stone fabrication,8.0,0,0.0
+W0415,Brick manufacture,5.735216571762601,2,0.0
+W0416,Construction,8.0,0,0.0
+W0417,Brick manufacture,3.5872029944827974,0,1.0
+W0418,Brick manufacture,6.282876104406098,2,1.0
+W0419,Stone fabrication,5.292459944801,1,1.0
+W0420,Construction,0.8637235700418227,1,0.0
+W0421,Construction,2.936815804228183,2,0.0
+W0422,Construction,4.743224669257243,1,1.0
+W0423,Stone fabrication,8.0,0,0.0
+W0424,Brick manufacture,7.312212582097124,2,1.0
+W0425,Construction,0.7349538866145354,2,0.0
+W0426,Construction,8.0,0,0.0
+W0427,Construction,4.242283049009716,0,0.0
+W0428,Construction,2.3162610538151274,2,0.0
+W0429,Construction,6.35457304839338,1,0.0
+W0430,Construction,8.0,0,
+W0431,Construction,1.4163664769550715,1,1.0
+W0432,Brick manufacture,8.0,0,0.0
+W0433,Brick manufacture,8.0,0,0.0
+W0434,Construction,8.0,0,0.0
+W0435,Brick manufacture,8.0,0,1.0
+W0436,Brick manufacture,8.0,0,
+W0437,Construction,8.0,0,0.0
+W0438,Brick manufacture,6.153084934595966,2,0.0
+W0439,Stone fabrication,0.4314321732373511,0,0.0
+W0440,Stone fabrication,1.0217118442684658,2,1.0
+W0442,Stone fabrication,8.0,0,0.0
+W0443,Brick manufacture,4.96657854919574,1,0.0
+W0444,Construction,0.5800398915743953,2,0.0
+W0445,Construction,8.0,0,
+W0446,Construction,8.0,0,0.0
+W0447,Stone fabrication,8.0,0,0.0
+W0448,Construction,4.9971544224351945,0,1.0
+W0449,Brick manufacture,0.384757980494222,1,0.0
+W0450,Stone fabrication,8.0,0,0.0
+W0451,Brick manufacture,8.0,0,1.0
+W0452,Brick manufacture,8.0,0,1.0
+W0454,Stone fabrication,2.000968533762091,1,1.0
+W0455,Stone fabrication,8.0,0,1.0
+W0456,Stone fabrication,8.0,0,0.0
+W0457,Construction,5.667982645963749,1,0.0
+W0458,Construction,7.288608365988352,2,0.0
+W0459,Brick manufacture,4.117138111927816,0,0.0
+W0460,Brick manufacture,1.6169908079936672,0,0.0
+W0461,Brick manufacture,4.903147887980841,0,0.0
+W0462,Stone fabrication,0.2712091965735411,1,0.0
+W0463,Stone fabrication,8.0,0,0.0
+W0464,Brick manufacture,8.0,0,0.0
+W0465,Brick manufacture,2.4341095710966543,2,1.0
+W0466,Construction,2.589947829467173,1,0.0
+W0467,Construction,8.0,0,1.0
+W0468,Brick manufacture,8.0,0,0.0
+W0469,Construction,8.0,0,0.0
+W0470,Brick manufacture,8.0,0,0.0
+W0471,Construction,2.8092874118394353,2,0.0
+W0472,Brick manufacture,3.688384368992918,2,0.0
+W0473,Brick manufacture,1.8058751633430736,0,0.0
+W0474,Stone fabrication,8.0,0,1.0
+W0475,Brick manufacture,8.0,0,1.0
+W0476,Construction,3.7202262024353305,1,1.0
+W0477,Brick manufacture,8.0,0,1.0
+W0478,Stone fabrication,8.0,0,1.0
+W0479,Stone fabrication,0.9280531336240107,0,1.0
+W0481,Brick manufacture,1.3714187848536712,1,0.0
+W0482,Stone fabrication,8.0,0,1.0
+W0483,Brick manufacture,8.0,0,0.0
+W0484,Stone fabrication,0.06845581685415475,1,1.0
+W0485,Stone fabrication,8.0,0,0.0
+W0486,Stone fabrication,8.0,0,1.0
+W0487,Brick manufacture,3.9750842984173316,0,0.0
+W0488,Stone fabrication,0.2090755995306026,1,0.0
+W0489,Construction,8.0,0,0.0
+W0490,Stone fabrication,1.0406108364215743,0,0.0
+W0491,Brick manufacture,8.0,0,0.0
+W0492,Stone fabrication,7.4997972913087185,2,0.0
+W0493,Construction,4.570326550143731,2,0.0
+W0494,Brick manufacture,8.0,0,1.0
+W0495,Brick manufacture,8.0,0,1.0
+W0496,Brick manufacture,6.244046124317285,0,0.0
+W0497,Stone fabrication,0.6693624745942696,2,0.0
+W0499,Brick manufacture,4.821190392667644,0,0.0
+W0500,Construction,7.926567248762148,2,1.0

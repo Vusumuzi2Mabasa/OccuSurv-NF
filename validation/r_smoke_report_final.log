@@ -1,0 +1,9 @@
+[33mNextflow 26.10.3 is available - Please consider updating your version to it(B[m
+N E X T F L O W  ~  version 25.10.2
+Launching `main.nf` [goofy_moriondo] DSL2 - revision: dc3a6e9f80
+[85/6205b5] Cached process > SIMULATE
+[d8/4d7ee4] Cached process > QC
+[14/20f61e] Cached process > LONGITUDINAL_INPUT
+[dd/4f95d9] Cached process > ANALYSE_R
+[5f/a86a14] Cached process > CROSSCHECK
+[e7/1ebb68] Submitted process > REPORT

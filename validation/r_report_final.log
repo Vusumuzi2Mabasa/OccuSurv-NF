@@ -1,0 +1,9 @@
+[33mNextflow 26.10.3 is available - Please consider updating your version to it(B[m
+N E X T F L O W  ~  version 25.10.2
+Launching `main.nf` [elegant_neumann] DSL2 - revision: dc3a6e9f80
+[19/ab78d3] Cached process > SIMULATE
+[d9/91d7af] Cached process > QC
+[f5/377c35] Cached process > LONGITUDINAL_INPUT
+[54/ce3ce4] Cached process > ANALYSE_R
+[01/e6fa67] Cached process > CROSSCHECK
+[0f/e86062] Submitted process > REPORT

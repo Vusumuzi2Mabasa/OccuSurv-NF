@@ -1,0 +1,132 @@
+[33mNextflow 26.10.3 is available - Please consider updating your version to it(B[m
+N E X T F L O W  ~  version 25.10.2
+Launching `main.nf` [dreamy_curry] DSL2 - revision: dc3a6e9f80
+[85/6205b5] Submitted process > SIMULATE
+[d8/4d7ee4] Submitted process > QC
+[14/20f61e] Submitted process > LONGITUDINAL_INPUT
+[dd/4f95d9] Submitted process > ANALYSE_R
+[14/64ec6a] Submitted process > CROSSCHECK
+ERROR ~ Error executing process > 'CROSSCHECK'
+
+Caused by:
+  Process `CROSSCHECK` terminated with an error exit status (1)
+
+
+Command executed:
+
+  /home/vusi/.venvs/occusurv-nf/bin/python crosscheck.py clean raw analysis longitudinal
+
+Command exit status:
+  1
+
+Command output:
+    "person_years": 199.54499784079442,
+    "model": {
+      "n": 36,
+      "events": 12,
+      "parameters": 3,
+      "minimum_events": 30,
+      "status": "skipped",
+      "reason": "fewer than 30 events"
+    },
+    "truth": {
+      "n_workers": 40,
+      "seed": 2026,
+      "synthetic": true,
+      "lag_years": 5,
+      "administrative_years": 8,
+      "weibull_shape": 1.4,
+      "baseline_scale": 0.012,
+      "beta": [
+        0.5306282510621704,
+        0.26236426446749106,
+        0.4054651081081644
+      ],
+      "covariates": [
+        "log2_1plus_cumulative",
+        "age_per_decade",
+        "smoker"
+      ],
+      "hazard_ratios": [
+        1.7,
+        1.3,
+        1.5
+      ],
+      "defects": [
+        "W0002 age below eligibility range",
+        "one negative follow-up time",
+        "one exact duplicated worker row",
+        "one negative measurement",
+        "one invalid measurement unit",
+        "approximately three percent missing smoking"
+      ]
+    },
+    "versions": {
+      "python": "3.13.13",
+      "numpy": "2.3.5",
+      "pandas": "2.3.3",
+      "scipy": "1.16.3",
+      "statsmodels": "0.14.5"
+    }
+  }
+  {"status": "FAIL", "checks": 19, "baseline_model": "skipped", "cause_models": ["skipped", "skipped"], "bootstrap": "identical R-generated worker indices recomputed by Python"}
+
+Command error:
+      "minimum_events": 30,
+      "status": "skipped",
+      "reason": "fewer than 30 events"
+    },
+    "truth": {
+      "n_workers": 40,
+      "seed": 2026,
+      "synthetic": true,
+      "lag_years": 5,
+      "administrative_years": 8,
+      "weibull_shape": 1.4,
+      "baseline_scale": 0.012,
+      "beta": [
+        0.5306282510621704,
+        0.26236426446749106,
+        0.4054651081081644
+      ],
+      "covariates": [
+        "log2_1plus_cumulative",
+        "age_per_decade",
+        "smoker"
+      ],
+      "hazard_ratios": [
+        1.7,
+        1.3,
+        1.5
+      ],
+      "defects": [
+        "W0002 age below eligibility range",
+        "one negative follow-up time",
+        "one exact duplicated worker row",
+        "one negative measurement",
+        "one invalid measurement unit",
+        "approximately three percent missing smoking"
+      ]
+    },
+    "versions": {
+      "python": "3.13.13",
+      "numpy": "2.3.5",
+      "pandas": "2.3.3",
+      "scipy": "1.16.3",
+      "statsmodels": "0.14.5"
+    }
+  }
+  {"status": "FAIL", "checks": 19, "baseline_model": "skipped", "cause_models": ["skipped", "skipped"], "bootstrap": "identical R-generated worker indices recomputed by Python"}
+  Traceback (most recent call last):
+    File "crosscheck.py", line 62, in <module>
+      print(json.dumps(result));assert result['status']=='PASS',rows
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^
+  AssertionError: [{'check': 'prevalence', 'max_abs_difference': 3.0531133177191805e-16, 'tolerance': 1e-07, 'passed': True}, {'check': 'incidence', 'max_abs_difference': 5.258016244624741e-13, 'tolerance': 1e-07, 'passed': True}, {'check': 'table1', 'max_abs_difference': 4.973799150320701e-14, 'tolerance': 1e-07, 'passed': True}, {'check': 'exposure means', 'max_abs_difference': 4.0245584642661925e-16, 'tolerance': 1e-07, 'passed': True}, {'check': 'KM estimates and risk sets', 'max_abs_difference': 3.3306690738754696e-16, 'tolerance': 1e-07, 'passed': True}, {'check': 'KM confidence bounds', 'max_abs_difference': 1.2395132831244382e-05, 'tolerance': 5e-06, 'passed': False}, {'check': 'risk table', 'max_abs_difference': 0.0, 'tolerance': 1e-07, 'passed': True}, {'check': 'Overall Aalen Johansen', 'max_abs_difference': 4.218847493575595e-15, 'tolerance': 1e-12, 'passed': True}, {'check': 'Overall disease bootstrap', 'max_abs_difference': 4.163336342344337e-16, 'tolerance': 1e-12, 'passed': True}, {'check': 'Overall death bootstrap', 'max_abs_difference': 3.3306690738754696e-16, 'tolerance': 1e-12, 'passed': True}, {'check': 'Brick manufacture Aalen Johansen', 'max_abs_difference': 4.218847493575595e-15, 'tolerance': 1e-12, 'passed': True}, {'check': 'Brick manufacture disease bootstrap', 'max_abs_difference': 2.7755575615628914e-16, 'tolerance': 1e-12, 'passed': True}, {'check': 'Brick manufacture death bootstrap', 'max_abs_difference': 3.3306690738754696e-16, 'tolerance': 1e-12, 'passed': True}, {'check': 'Construction Aalen Johansen', 'max_abs_difference': 3.552713678800501e-15, 'tolerance': 1e-12, 'passed': True}, {'check': 'Construction disease bootstrap', 'max_abs_difference': 2.498001805406602e-16, 'tolerance': 1e-12, 'passed': True}, {'check': 'Construction death bootstrap', 'max_abs_difference': 2.7755575615628914e-16, 'tolerance': 1e-12, 'passed': True}, {'check': 'Stone fabrication Aalen Johansen', 'max_abs_difference': 3.552713678800501e-15, 'tolerance': 1e-12, 'passed': True}, {'check': 'Stone fabrication disease bootstrap', 'max_abs_difference': 4.440892098500626e-16, 'tolerance': 1e-12, 'passed': True}, {'check': 'Stone fabrication death bootstrap', 'max_abs_difference': 3.3306690738754696e-16, 'tolerance': 1e-12, 'passed': True}]
+
+Work dir:
+  /mnt/toshiba/occusurv-nf/work/14/64ec6adecd62f98e84bf6eac6635c9
+
+Tip: you can replicate the issue by changing to the process work dir and entering the command `bash .command.run`
+
+ -- Check '.nextflow.log' file for details
+WARN: Failed to render execution report -- see the log file for details

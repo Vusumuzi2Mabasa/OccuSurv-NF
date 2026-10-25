@@ -6,32 +6,39 @@
   "disease": 93,
   "deaths": 83,
   "censored": 301,
-  "person_years": 2603.35523619287,
+  "person_years": 2603.3552361928705,
   "model_complete_subjects": 462,
   "models": [
     {
       "cause": 1,
+      "status": "fitted",
       "events": 89,
+      "n": 462,
       "subjects": 462,
       "intervals": 2649,
-      "status": "fitted",
-      "score_max": 6.639133687258436e-14,
+      "minimum_events": 30,
+      "score_max": 1.0288963366196502e-11,
       "warnings": [],
+      "ties": "breslow",
       "covariance": "model-based counting-process information; independent workers",
-      "ties": "breslow"
+      "log_likelihood": -505.49434406088312
     },
     {
       "cause": 2,
+      "status": "fitted",
       "events": 80,
+      "n": 462,
       "subjects": 462,
       "intervals": 2649,
-      "status": "fitted",
-      "score_max": 2.930988785010413e-14,
+      "minimum_events": 30,
+      "score_max": 2.5855186047696321e-14,
       "warnings": [],
+      "ties": "breslow",
       "covariance": "model-based counting-process information; independent workers",
-      "ties": "breslow"
+      "log_likelihood": -456.21919524694209
     }
   ],
   "bootstrap_replicates": 200,
+  "bootstrap_seed": 2028,
   "worker_sampling": "iid within each displayed group; no residual workplace frailty assumed"
 }
