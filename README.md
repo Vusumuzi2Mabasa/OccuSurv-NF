@@ -65,7 +65,7 @@ The Cox model uses complete cases, with no automated covariate selection. The mi
 
 ![Disease-free survival by industry](results/figures/survival.png)
 
-**Figure 3.** Kaplan–Meier estimates among initially disease-free workers. Shading denotes pointwise log-minus-log 95% intervals. Industry differences are descriptive and do not identify a causal industry effect. [Numbers at risk](results/analysis/risk_table.csv) are provided at 0, 2, 4, 6 and 8 years.
+**Figure 3.** Kaplanâ€“Meier estimates among initially disease-free workers. Shading denotes pointwise log-minus-log 95% intervals. Industry differences are descriptive and do not identify a causal industry effect. [Numbers at risk](results/analysis/risk_table.csv) are provided at 0, 2, 4, 6 and 8 years.
 
 ### Adjusted associations
 
@@ -98,7 +98,7 @@ $$
 T_i=\left[\frac{-\log U_i}{0.012\exp(\eta_i)}\right]^{1/1.4},\quad U_i\sim\mathrm{Uniform}(0,1).
 $$
 
-Observed time is the minimum of event time and independent censoring. Cox regression maximises the partial likelihood over observed diagnoses, using contemporaneous risk sets rather than assigning a distribution to the fitted baseline hazard. Newton updates use the score and observed information; confidence intervals are obtained by exponentiating coefficient Wald intervals. The [full specification](docs/METHODS.md) covers partial likelihood, optimisation, information matrix, Wilson prevalence intervals, person-time rates, Kaplan–Meier and Greenwood calculations, and Schoenfeld residuals. The Word report displays these equations as high-resolution equation images; the LaTeX sources remain editable in `docs/methods.json`.
+Observed time is the minimum of event time and independent censoring. Cox regression maximises the partial likelihood over observed diagnoses, using contemporaneous risk sets rather than assigning a distribution to the fitted baseline hazard. Newton updates use the score and observed information; confidence intervals are obtained by exponentiating coefficient Wald intervals. The [full specification](docs/METHODS.md) covers partial likelihood, optimisation, information matrix, Wilson prevalence intervals, person-time rates, Kaplanâ€“Meier and Greenwood calculations, and Schoenfeld residuals. The Word report displays these equations as high-resolution equation images; the LaTeX sources remain editable in `docs/methods.json`.
 
 ## Quality control and analysis decisions
 
@@ -177,4 +177,4 @@ Important limitations include absent competing mortality, healthy-worker selecti
 - [PHReg model and numerical methods](https://www.statsmodels.org/stable/generated/statsmodels.duration.hazard_regression.PHReg.html)
 - [PHReg fit options and robust group covariance](https://www.statsmodels.org/stable/generated/statsmodels.duration.hazard_regression.PHReg.fit.html)
 
-The project is prepared for GitHub publication. No GitHub remote is configured for this new project. All committed datasets are synthetic; temporary environments, Nextflow work directories and report-rendering intermediates are excluded from version control.
+The public source repository is [Vusumuzi2Mabasa/OccuSurv-NF](https://github.com/Vusumuzi2Mabasa/OccuSurv-NF). Download the [Word research report](results/report/OccuSurv_report.docx) for the full methods and results. All committed datasets are synthetic; temporary environments, Nextflow work directories and report-rendering intermediates are excluded from version control.
