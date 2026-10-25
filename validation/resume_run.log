@@ -1,0 +1,8 @@
+[33mNextflow 26.10.3 is available - Please consider updating your version to it(B[m
+N E X T F L O W  ~  version 25.10.2
+Launching `main.nf` [focused_crick] DSL2 - revision: b1f38bb8a3
+[20/d72211] Submitted process > SIMULATE
+[33/a004ce] Submitted process > QC
+[85/8e5ab4] Submitted process > ANALYSE
+[33/4d0ca5] Submitted process > FIGURES
+[4e/7e1ca6] Submitted process > REPORT

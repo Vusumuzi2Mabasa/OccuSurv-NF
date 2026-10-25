@@ -1,0 +1,10 @@
+.tools/
+.venv/
+work/
+.nextflow*
+__pycache__/
+*.pyc
+qa/
+local.config
+results-smoke/
+results/execution/*.html

@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "workers": 39,
+  "events": 13,
+  "model": "skipped",
+  "checks": [
+    "raw hashes unchanged",
+    "cohort eligibility",
+    "event counts",
+    "person time",
+    "rates",
+    "model gate",
+    "figures",
+    "Word report"
+  ]
+}

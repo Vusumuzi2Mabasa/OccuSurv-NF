@@ -1,0 +1,19 @@
+test_conflicting_ids_fail (test_pipeline.Tests.test_conflicting_ids_fail) ... ok
+test_cox_likelihood_and_score (test_pipeline.Tests.test_cox_likelihood_and_score) ... ok
+test_cumulative_exposure_formula (test_pipeline.Tests.test_cumulative_exposure_formula) ... ok
+test_incident_cohort_excludes_prevalent (test_pipeline.Tests.test_incident_cohort_excludes_prevalent) ... ok
+test_km_all_censored (test_pipeline.Tests.test_km_all_censored) ... ok
+test_km_known (test_pipeline.Tests.test_km_known) ... ok
+test_km_matches_library (test_pipeline.Tests.test_km_matches_library) ... ok
+test_low_event_model_skips (test_pipeline.Tests.test_low_event_model_skips) ... ok
+test_missing_column_fail (test_pipeline.Tests.test_missing_column_fail) ... ok
+test_nonpositive_time_denominator (test_pipeline.Tests.test_nonpositive_time_denominator) ... ok
+test_qc_defects_and_hashes (test_pipeline.Tests.test_qc_defects_and_hashes) ... ok
+test_seed_reproducibility (test_pipeline.Tests.test_seed_reproducibility) ... ok
+test_wilson_boundaries (test_pipeline.Tests.test_wilson_boundaries) ... ok
+test_zero_events_interval (test_pipeline.Tests.test_zero_events_interval) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.691s
+
+OK

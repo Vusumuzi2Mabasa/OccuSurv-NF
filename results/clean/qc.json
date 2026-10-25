@@ -1,0 +1,15 @@
+{
+  "workers_raw": 501,
+  "workers_retained": 499,
+  "followup_retained": 476,
+  "model_complete": 461,
+  "measurements_raw": 1500,
+  "measurements_retained": 1495,
+  "audit_entries": 26,
+  "input_sha256": {
+    "followup.csv": "ba0c90d422ee9c89d089a6584729fd9d30c6c50f4e17038f40a6f4510268aa17",
+    "measurements.csv": "9ab0fcea1f58918152fc737f48d4f8d10ab039af30d45673e52f6032e7669634",
+    "truth.json": "58b5577b137ea5940f134f7a8854361d89f7658e8e2c1f2f93c4072325dc42e3",
+    "workers.csv": "86551ad9cea7659974d4f85d341cf14464333998b4eea0445eef95439bf33cdf"
+  }
+}

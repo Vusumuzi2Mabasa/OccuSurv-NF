@@ -1,0 +1,24 @@
+OCCUSURV NF LOCAL EXECUTION
+
+Project on Toshiba: D:\occusurv-nf
+Linux path used for this test: /mnt/toshiba/occusurv-nf
+Scientific environment: /home/vusi/.venvs/occusurv-nf
+Nextflow launcher: .tools/nextflow (25.10.2)
+Java: 21
+
+From WSL Ubuntu-24.04:
+cd /mnt/toshiba/occusurv-nf
+bash .tools/nextflow run main.nf -c local.config --outdir results-new -ansi-log false
+/home/vusi/.venvs/occusurv-nf/bin/python -m unittest discover -s tests -v
+/home/vusi/.venvs/occusurv-nf/bin/python bin/verify_outputs.py results-new
+
+To resume the same run, repeat its command with -resume.
+For the small smoke run, use -profile smoke and a separate output directory.
+local.config is machine-specific and excluded from Git. It sets the scientific
+Python executable and the bundled Windows Python report executable, and uses
+copy staging for Windows interoperability. Portable Linux instructions are in
+README.md. Tools/environments were not added to system PATH or committed.
+
+The Word report contains rendered equations; the mathematical source is in
+docs/methods.json and docs/METHODS.md. Figure code and report code are versioned.
+HPC execution is not tested. No remote cluster jobs or GitHub pushes performed.
