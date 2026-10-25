@@ -1,5 +1,7 @@
 # Statistical methodology
 
+The original sections specify the baseline reference scenario. The longitudinal extension below generates separate competing-event outcomes on the same eligible workers.
+
 All parameters below describe a synthetic data-generating mechanism. No NIOH observations are used.
 
 ## Exposure
@@ -112,3 +114,59 @@ I(\beta)=\sum_{i:\delta_i=1}\left[\frac{S^{(2)}(Y_i,\beta)}{S^{(0)}(Y_i,\beta)}-
 $$
 
 Thus U is the gradient of the partial log likelihood and I is its negative Hessian. The unit tests compare the library log likelihood against an explicit risk-set sum and its score against a finite-difference gradient. They also compare the implemented Kaplan–Meier estimates against Statsmodels on a small dataset with tied times. These numerical checks do not establish statistical coverage.
+
+## Longitudinal competing-risk extension
+
+The extension uses the eligible baseline disease-free workers, including those without usable baseline-scenario follow-up because the new scenario generates its own times. Seed 2027 produces new outcomes; it is not a counterfactual comparison with the original cohort results. Smoking is fixed. Missing smoking receives a latent Bernoulli(0.35) value only for generation and remains missing in estimation.
+
+Annual concentration is historical concentration times independent lognormal noise with log SD 0.25 and a multiplier of 0.65 from year three. With five-year lag L, the annual cumulative exposure is:
+
+$$
+C_i(k)=c_i\max[d_i-\max(L-k,0),0]+\sum_{m=0}^{k-L-1}e_{im},\quad L=5.
+$$
+
+Concentration is constant within a year, so each term integrates one year of exposure. Empty sums are zero. The historical term admits pre-baseline exposure as it ages past the lag; the second term admits only sufficiently old post-baseline exposure. The transformed covariate is log2(1+C/C0), with C0=1 mg year/m3, held fixed on each annual risk interval. No future exposure enters the model.
+
+### Cause-specific event generation
+
+$$
+\lambda_{ij}(k)=\lambda_{0j}\exp\{\beta_{jx}x_i(k)+\beta_{ja}a_i+\beta_{js}s_i\}.
+$$
+
+Diagnosis has baseline rate 0.018/year and HRs (1.7, 1.3, 1.5). Competing death has baseline rate 0.025/year and HRs (1.0, 1.5, 1.2). Covariates are the exposure transform, baseline age per decade centred at 45, and smoking. These values are illustrative assumptions.
+
+$$
+W_i\sim\operatorname{Exponential}(\lambda_{i1}+\lambda_{i2}),\qquad
+P(J_i=j\mid\text{event})=\lambda_{ij}/(\lambda_{i1}+\lambda_{i2}).
+$$
+
+If the waiting time is shorter than the remaining interval and censoring time, record that first cause and stop. Otherwise update exposure at the next annual boundary. Independent censoring is min(8, Exponential(mean 25 years)). Codes are diagnosis (1), death before diagnosis (2), and censoring (0). Death after diagnosis is outside this first-event analysis.
+
+### Start-stop partial likelihood
+
+$$
+R(t)=\{(i,k):\operatorname{start}_{ik}<t\leq\operatorname{stop}_{ik}\},
+$$
+
+$$
+\ell_j(\beta_j)=\sum_{i:J_i=j}\left[X_i(T_i)^T\beta_j-\log\left\{\sum_{l\in R(T_i)}\exp(X_l(T_i)^T\beta_j)\right\}\right].
+$$
+
+Each worker contributes at most one active record at an event time. PHReg entry is advanced to the next representable floating-point value above start to enforce the open-left boundary, including events exactly at a split. Tests compare library likelihood and score with explicit start-stop risk sets. Both events terminate subsequent risk membership. Other causes have zero indicator for a given cause-specific model; they are not ignored when calculating cumulative incidence.
+
+The information matrix supplies model-based covariance under independent first-event counting processes. Split rows do not create extra independent workers or recurrent events. Newton optimisation, score checks and Wald intervals follow the baseline specification. Each cause-specific fit is skipped below 30 events; no Fine-Gray model is implemented. External censoring is assumed independent. Independence of unobserved latent disease and death times is not needed to define the observed cause-specific hazard.
+
+### Aalen-Johansen probabilities and uncertainty
+
+$$
+\widehat S(t)=\prod_{u\leq t}\left[1-\frac{d_1(u)+d_2(u)}{n(u)}\right],\qquad
+\widehat F_j(t)=\sum_{u\leq t}\widehat S(u-)\frac{d_j(u)}{n(u)}.
+$$
+
+Tied causes are processed together, using survival immediately before the event. The identity F1+F2+S=1 is checked. The disease curve 1-KM obtained by censoring deaths targets a different quantity from observed cumulative disease probability.
+
+Pointwise 95% limits are empirical 2.5th and 97.5th percentiles of 200 whole-worker bootstrap CIFs evaluated on a 0.1-year grid. Each reported group is resampled separately at fixed sample size. Intervals are neither simultaneous bands nor workplace-cluster-robust intervals. No residual workplace frailty is simulated. Two hundred replicates keep the demonstration small but leave Monte Carlo error in tail quantiles.
+
+Planned exposure schedules after an event are stored as latent simulation inputs only. Plots of exposure medians include only workers still observed. A reduction from year three has little or no effect in an eight-year analysis under a five-year lag; no intervention efficacy is inferred. Time-varying confounding, diagnostic error and healthy-worker selection remain outside this implementation.
+
+References: [PHReg](https://www.statsmodels.org/stable/generated/statsmodels.duration.hazard_regression.PHReg.html) and [CumIncidenceRight](https://www.statsmodels.org/stable/generated/statsmodels.duration.survfunc.CumIncidenceRight.html).

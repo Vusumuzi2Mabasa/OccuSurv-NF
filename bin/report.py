@@ -44,7 +44,7 @@ def build(a):
         e=next(e for e in methods if e['id']==i);d.add_picture(str(Path(a.equations)/(i+'.png')),width=Inches({'residual':4.4,'cox':5.8,'newton':5.8,'hr':5.5,'km':5.6}.get(i,6.6)));para(e['explanation'])
     d.add_heading('Occupational exposure and respiratory disease surveillance',0)
     para('A reproducible synthetic cohort analysis using Nextflow')
-    para('Research software validation report | OccuSurv NF version 0.1.0 | Seed '+str(s['truth']['seed']))
+    para('Research software validation report | OccuSurv NF version 0.2.0 | Seed '+str(s['truth']['seed']))
     para('This study evaluates a reproducible workflow for exposure monitoring, disease surveillance and time-to-event analysis. All worker records and outcomes are simulated. The analysis demonstrates computational behaviour under stated assumptions and does not estimate disease burden or risk for NIOH or any real workforce.')
     heading('Principal findings')
     overall=read(src/'incidence.csv')[0];prev=read(src/'prevalence.csv')[0]
@@ -80,9 +80,39 @@ def build(a):
         rr=read(src/'cox.csv');table(['Term','HR','95 percent CI','P'],[[r['term'],f"{float(r['hr']):.3f}",f"{float(r['lower']):.3f} to {float(r['upper']):.3f}",f"{float(r['p']):.3g}"] for r in rr])
         image('ph_diagnostics.png','Figure 5. Schoenfeld residuals and LOWESS trends against log event time. These are exploratory diagnostics rather than a formal test.',6.6)
     else:para('The Cox model was not fitted: '+s['model']['reason']+'. No effect estimates or model diagnostics are manufactured.')
+    ext=Path(a.longitudinal);ex=json.loads((ext/'summary.json').read_text());oldfigs=figs;figs=Path(a.longitudinal_figures)
+    page('Time varying exposure and competing events')
+    para('This extension generates new follow-up outcomes for the same eligible baseline disease-free workers. It is a separate scenario, not an additional follow-up phase and not a paired estimate of the effect of adding mortality. The preceding baseline reference results are retained unchanged.')
+    para('Annual concentration equals historical concentration times independent lognormal noise with log SD 0.25, multiplied by 0.65 from year three. This planned reduction is illustrative, not an estimated causal intervention. Historical exposure enters the cumulative measure only once it is at least five years old.')
+    equation('tv_exposure');equation('tv_hazard');equation('tv_risk')
+    para('Within each annual interval, waiting time is exponential with the sum of the two hazard rates. If a first event occurs before the next boundary or independent censoring, its cause is selected with probability proportional to its rate. Follow-up stops at that event. Censoring is the minimum of eight years and Exponential(mean 25 years).')
+    para('QC requires contiguous nonoverlapping intervals from baseline to terminal time, one terminal event at most, consistent cause coding, valid exposure schedules and no post-event observations. Only complete workers enter both cause-specific models. Each model is skipped below 30 events of its own cause.')
+    page('Cumulative incidence with competing mortality')
+    equation('aj')
+    image('cumulative_incidence.png','Figure 6. Aalen-Johansen disease and death probabilities with pointwise bootstrap intervals. The dashed disease curve treats death as censoring and therefore does not estimate the observed disease probability.')
+    endpoints=[r for r in read(ext/'cif_intervals.csv') if r['group']=='Overall' and float(r['time'])==8]
+    table(['Cause at eight years','Probability','95 percent interval'],[[r['cause'],f"{float(r['cif']):.3f}",f"{float(r['lower']):.3f} to {float(r['upper']):.3f}"] for r in endpoints])
+    para(f"The extension includes {ex['subjects']} workers, {ex['intervals']} at-risk intervals, {ex['disease']} diagnoses and {ex['deaths']} competing deaths over {ex['person_years']:.1f} person-years. Independent censoring and absence of residual workplace dependence are assumed. Bootstrap draws resample whole workers, never individual interval rows.")
+    page('Exposure trajectories and industry probabilities')
+    image('exposure_history.png','Figure 7. Medians among workers still under observation. Changes reflect both the planned schedules and changing risk-set composition; later latent exposure values are never used after an event.')
+    image('cif_by_industry.png','Figure 8. Unadjusted diagnosis cumulative incidence by industry with pointwise bootstrap intervals. Industry comparisons are descriptive and incorporate competing mortality.')
+    para('Full planned exposure histories are stored for auditing the simulation. They are explicitly latent schedules, not post-death measurements. The models use only rows with positive at-risk duration before the first event or censoring.')
+    page('Time varying cause specific associations')
+    image('time_varying_hr.png','Figure 9. Cause-specific Cox HRs with 95 percent model-based Wald intervals. Crosses show assumed generating HRs. An HR changes an instantaneous rate among event-free workers, not an absolute cumulative risk.')
+    rows=[]
+    labels={'log2_1plus_lagged':'Lagged exposure','age_per_decade':'Age per decade','smoker':'Smoker'}
+    for cause in [1,2]:
+        f=ext/f'cox_cause{cause}.csv'
+        if f.exists():
+            for r in read(f):rows.append(['Diagnosis' if cause==1 else 'Death',labels[r['term']],f"{float(r['hr']):.3f}",f"{float(r['lower']):.3f} to {float(r['upper']):.3f}"])
+    if rows:table(['Cause','Covariate','HR','95 percent CI'],rows)
+    else:para('Both cause-specific models were skipped because too few events were observed.')
+    para('The split-record Cox analysis uses interval entry times and a single active record per worker at each event. Model-based information provides uncertainty under independent worker event processes; repeated rows are not treated as recurrent events. Both competing events remove a worker from subsequent risk sets. Missing smoking remains missing for estimation, although a latent smoking value is simulated to generate outcomes.')
+    para('No Fine-Gray model, causal effect of exposure reduction or individual risk prediction is claimed. The bootstrap uses 200 replicates to keep the demonstration small; more replicates and cluster-aware analysis would be needed for a real workforce.')
+    figs=oldfigs
     page('Interpretation limitations and reproducibility')
     para('This simulation verifies data flow and numerical execution for a small dataset. Agreement with generating values in one run does not establish estimator unbiasedness, confidence interval coverage or suitability for surveillance decisions. Statistical significance is not a validation criterion.')
-    para('The design omits competing mortality, healthy worker selection, diagnostic misclassification, time-varying exposures and informative loss to follow-up. The five-year lag is a declared modelling choice. Twelve workplaces are not sufficient to justify complex hierarchical inference without further investigation. The independent nature of the project is explicit; it uses no institutional patient data and is not endorsed by NIOH.')
+    para('The baseline reference scenario omits competing mortality and time-varying exposure; the extension adds these explicitly. Both scenarios omit healthy worker selection, diagnostic misclassification and informative loss to follow-up. The five-year lag is a declared modelling choice. Twelve workplaces are not sufficient to justify complex hierarchical inference without further investigation. The independent nature of the project is explicit; it uses no institutional patient data and is not endorsed by NIOH.')
     para('Nextflow runs simulation, QC, statistical analysis, figures and this report as dependent processes. Outputs include CSV tables, QC audit, hashes, assumptions, software versions and execution trace. Resume behaviour and a low-event smoke run are checked separately in the repository validation record.')
     table(['Component','Version'],[[k,v] for k,v in s['versions'].items()]+[['Report Python',platform.python_version()],['python docx',docx.__version__]])
     heading('Method references')
@@ -94,5 +124,5 @@ def build(a):
     (out/'report_versions.json').write_text(json.dumps(dict(python=platform.python_version(),python_docx=docx.__version__),indent=2))
 if __name__=='__main__':
     p=argparse.ArgumentParser()
-    for name in ['analysis','clean','figures','methods','equations']:p.add_argument('--'+name,required=True)
+    for name in ['analysis','clean','figures','methods','equations','longitudinal','longitudinal_figures']:p.add_argument('--'+name,required=True)
     p.add_argument('--out',default='report');build(p.parse_args())

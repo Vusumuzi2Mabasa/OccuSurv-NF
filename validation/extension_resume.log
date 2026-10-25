@@ -1,0 +1,10 @@
+[33mNextflow 26.10.3 is available - Please consider updating your version to it(B[m
+N E X T F L O W  ~  version 25.10.2
+Launching `main.nf` [mad_bose] DSL2 - revision: 1984206304
+[f6/cfc500] Cached process > SIMULATE
+[94/463a59] Cached process > QC
+[4c/a61257] Cached process > LONGITUDINAL
+[d5/20c286] Cached process > ANALYSE
+[34/aee612] Cached process > LONGITUDINAL_FIGURES
+[be/ec3e4b] Cached process > FIGURES
+[cd/9a5f85] Cached process > REPORT

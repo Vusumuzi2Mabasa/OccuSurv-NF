@@ -1,0 +1,26 @@
+{
+  "seed": 2027,
+  "n": 477,
+  "lag_years": 5,
+  "years": 8,
+  "disease_baseline": 0.018,
+  "death_baseline": 0.025,
+  "hr_disease": [
+    1.7,
+    1.3,
+    1.5
+  ],
+  "hr_death": [
+    1.0,
+    1.5,
+    1.2
+  ],
+  "terms": [
+    "log2_1plus_lagged",
+    "age_per_decade",
+    "smoker"
+  ],
+  "bootstrap_replicates": 200,
+  "scenario": "new outcomes on same baseline disease-free workers",
+  "planned_concentrations": "latent complete schedules; post-event values never used in risk sets"
+}

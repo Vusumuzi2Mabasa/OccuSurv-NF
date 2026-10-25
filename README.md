@@ -14,9 +14,15 @@ flowchart LR
  B --> E[Word research report]
  C --> E
  D --> E
+ B --> F[Annual exposure and competing event simulation]
+ F --> G[Time varying Cox and Aalen Johansen figures]
+ F --> E
+ G --> E
 ```
 
 ## Study design
+
+Version 0.2 adds a separate longitudinal scenario with annual exposure histories, time-varying cause-specific Cox models, and Aalen–Johansen cumulative incidence accounting for competing death. The original baseline analysis is retained as a reference. All seven Nextflow processes were tested, including the low-event model-skip path and cached resume.
 
 Five hundred workers are allocated across twelve workplaces and three industries. Each has age, smoking status, a historical employment duration and concentration, three noisy baseline exposure measurements, and baseline disease status. Only workers without baseline disease enter incident follow-up. Follow-up ends at diagnosis, independently generated loss to follow-up, or eight years.
 
@@ -24,7 +30,7 @@ The five-year lagged cumulative exposure is concentration multiplied by eligible
 
 This design intentionally produces enough diagnoses to exercise the statistical code. The incidence level and all effect sizes are assumed demonstration parameters, not calibrated silicosis rates. One realised dataset cannot establish power, bias or confidence interval coverage.
 
-## Results
+## Baseline reference results
 
 | Measure | Result |
 |---|---:|
@@ -65,7 +71,7 @@ The Cox model uses complete cases, with no automated covariate selection. The mi
 
 ![Disease-free survival by industry](results/figures/survival.png)
 
-**Figure 3.** Kaplanâ€“Meier estimates among initially disease-free workers. Shading denotes pointwise log-minus-log 95% intervals. Industry differences are descriptive and do not identify a causal industry effect. [Numbers at risk](results/analysis/risk_table.csv) are provided at 0, 2, 4, 6 and 8 years.
+**Figure 3.** KaplanÃ¢â‚¬â€œMeier estimates among initially disease-free workers. Shading denotes pointwise log-minus-log 95% intervals. Industry differences are descriptive and do not identify a causal industry effect. [Numbers at risk](results/analysis/risk_table.csv) are provided at 0, 2, 4, 6 and 8 years.
 
 ### Adjusted associations
 
@@ -76,6 +82,60 @@ The Cox model uses complete cases, with no automated covariate selection. The mi
 ![Schoenfeld residual diagnostic plots](results/figures/ph_diagnostics.png)
 
 **Figure 5.** Schoenfeld residuals versus log event time with LOWESS smoothing. This is an exploratory proportional-hazards diagnostic; neither visually flat curves nor small descriptive rank correlations establish proportional hazards. No formal global PH test is claimed.
+
+## Time varying exposure and competing risks
+
+Version 0.2 adds a separate longitudinal scenario using the same eligible baseline disease-free workers. It generates new outcomes rather than extending the baseline follow-up or estimating a paired intervention effect. Annual exposure varies; observation ends at first diagnosis, competing death, independent censoring or eight years.
+
+The extension includes 477 workers and 2,743 at-risk intervals, with 93 diagnoses and 83 competing deaths over 2,603.4 person-years. Both cause-specific Cox models converged without warnings on 462 complete-case workers: 89 diagnoses and 80 deaths. Baseline reference results above remain unchanged.
+
+| Eight-year outcome | Cumulative incidence | 95% pointwise bootstrap interval |
+|---|---:|---:|
+| disease | 0.217 | 0.180 to 0.255 |
+| death | 0.198 | 0.163 to 0.231 |
+
+| Cause | Covariate | HR | 95% Wald interval | Assumed HR |
+|---|---|---:|---:|---:|
+| Diagnosis | log2_1plus_lagged | 1.759 | 1.253 to 2.468 | 1.70 |
+| Diagnosis | age_per_decade | 1.264 | 1.035 to 1.544 | 1.30 |
+| Diagnosis | smoker | 1.354 | 0.889 to 2.063 | 1.50 |
+| Death | log2_1plus_lagged | 1.078 | 0.728 to 1.595 | 1.00 |
+| Death | age_per_decade | 1.360 | 1.110 to 1.666 | 1.50 |
+| Death | smoker | 0.848 | 0.530 to 1.355 | 1.20 |
+
+
+![Annual exposure and lagged cumulative exposure](results/longitudinal_figures/exposure_history.png)
+
+**Figure 6.** Industry medians among workers still observed. The five-year lag admits only past exposure into each annual risk interval. Planned schedules after an event are latent simulation inputs, not observed measurements, and are never used in subsequent risk sets.
+
+![Aalen Johansen cumulative incidence](results/longitudinal_figures/cumulative_incidence.png)
+
+**Figure 7.** Diagnosis and competing-death cumulative incidence with pointwise percentile intervals from 200 whole-worker bootstrap samples. The dashed disease curve treats death as ordinary censoring; it does not estimate the observed diagnosis probability in the presence of competing death.
+
+![Diagnosis cumulative incidence by industry](results/longitudinal_figures/cif_by_industry.png)
+
+**Figure 8.** Unadjusted industry-specific diagnosis probability with pointwise bootstrap intervals. Sampling is at the worker level within each displayed group. These are not simultaneous or workplace-cluster-robust bands.
+
+![Time varying cause specific hazard ratios](results/longitudinal_figures/time_varying_hr.png)
+
+**Figure 9.** Cause-specific Cox hazard ratios with model-based 95% Wald intervals. Crosses identify assumed generating values. An HR describes an instantaneous rate among event-free workers; it is not an absolute risk or a Fine-Gray subdistribution HR. Each model requires at least 30 events of its own cause among complete cases.
+
+For concentration c, historical duration d, and post-baseline annual concentration e, the exposure integral at integer year k is:
+
+$$
+C_i(k)=c_i\max[d_i-\max(5-k,0),0]+\sum_{m=0}^{k-6}e_{im}.
+$$
+
+An empty sum is zero. Exposure is held fixed within annual intervals. Risk rows satisfy start < t <= stop, with at most one active row per worker. The diagnosis and death hazards have separate baseline rates and coefficients.
+
+$$
+\widehat F_j(t)=\sum_{u\leq t}\widehat S(u-)\frac{d_j(u)}{n(u)},\qquad
+\widehat S(t)=\prod_{u\leq t}\left[1-\frac{d_1(u)+d_2(u)}{n(u)}\right].
+$$
+
+The Aalen-Johansen estimator integrates each cause's event fraction against survival free of either event. The [extended mathematical methods](docs/METHODS.md#longitudinal-competing-risk-extension) specify simulation, start-stop likelihood, risk-set boundaries and uncertainty. The planned concentration reduction from year three has little or no influence on an eight-year hazard window with a five-year lag. No preventive efficacy, causal intervention effect or Fine-Gray model is claimed.
+
+Download [interval and history QC](results/longitudinal/qc.json), [model status](results/longitudinal/summary.json), [diagnosis HRs](results/longitudinal/cox_cause1.csv), [death HRs](results/longitudinal/cox_cause2.csv), [CIF intervals](results/longitudinal/cif_intervals.csv) and [event-free survival and cumulative incidence curves](results/longitudinal/aj_curves.csv).
 
 ## Mathematical methods
 
@@ -98,7 +158,7 @@ $$
 T_i=\left[\frac{-\log U_i}{0.012\exp(\eta_i)}\right]^{1/1.4},\quad U_i\sim\mathrm{Uniform}(0,1).
 $$
 
-Observed time is the minimum of event time and independent censoring. Cox regression maximises the partial likelihood over observed diagnoses, using contemporaneous risk sets rather than assigning a distribution to the fitted baseline hazard. Newton updates use the score and observed information; confidence intervals are obtained by exponentiating coefficient Wald intervals. The [full specification](docs/METHODS.md) covers partial likelihood, optimisation, information matrix, Wilson prevalence intervals, person-time rates, Kaplanâ€“Meier and Greenwood calculations, and Schoenfeld residuals. The Word report displays these equations as high-resolution equation images; the LaTeX sources remain editable in `docs/methods.json`.
+Observed time is the minimum of event time and independent censoring. Cox regression maximises the partial likelihood over observed diagnoses, using contemporaneous risk sets rather than assigning a distribution to the fitted baseline hazard. Newton updates use the score and observed information; confidence intervals are obtained by exponentiating coefficient Wald intervals. The [full specification](docs/METHODS.md) covers partial likelihood, optimisation, information matrix, Wilson prevalence intervals, person-time rates, KaplanÃ¢â‚¬â€œMeier and Greenwood calculations, and Schoenfeld residuals. The Word report displays these equations as high-resolution equation images; the LaTeX sources remain editable in `docs/methods.json`.
 
 ## Quality control and analysis decisions
 
@@ -141,7 +201,7 @@ nextflow run main.nf -profile smoke --outdir results-smoke
 
 A run with 40 workers exercises the low-event model-skip path while still producing QC, descriptive results, figures and a report. Use a separate output directory for each seed or design to avoid confusing published outputs. Nextflow's work directory and cache must remain available for `-resume`; see [cache and resume](https://docs.seqera.io/nextflow/cache-and-resume).
 
-The main execution graph contains five processes:
+The main execution graph contains seven processes:
 
 | Process | Inputs | Outputs |
 |---|---|---|
@@ -149,7 +209,9 @@ The main execution graph contains five processes:
 | QC | Raw tables | `clean/` tables, exclusion audit and input hashes |
 | ANALYSE | Clean tables and truth | Descriptive tables, survival curves, Cox results, diagnostics and versions |
 | FIGURES | Analysis outputs | Five PNG figures when regression is fitted; three when skipped |
-| REPORT | Analysis, QC, figures and equation assets | Word report and report-runtime versions |
+| LONGITUDINAL | Eligible workers and seed | Histories, interval QC, cause-specific models and CIF tables |
+| LONGITUDINAL_FIGURES | Longitudinal outputs | Four additional figures |
+| REPORT | Both scenarios, QC, figures and equation assets | Word report and report-runtime versions |
 
 Process scripts are explicit Nextflow inputs so source changes invalidate relevant cache entries. Each run also exports execution trace, timeline and Nextflow HTML report. The scientific Word report is separate from Nextflow's computational HTML report.
 
@@ -168,7 +230,7 @@ nextflow run main.nf -profile slurm -c conf/site.config \
 
 The [validation record](validation/VALIDATION.md) distinguishes executed checks from untested deployment paths. Tests include deterministic data generation, injected defects, ID conflicts, missing schemas, known survival values, interval boundary cases and model skipping. The full run is a computational demonstration, not validation of a clinical risk tool.
 
-Important limitations include absent competing mortality, healthy-worker selection, uncertain historical exposure, informative censoring, time-varying covariates and unmeasured workplace frailty. A real surveillance application requires a prespecified estimand, approved data access, clinically meaningful case definitions, appropriate dependence modelling and external validation. No spatial, Bayesian or causal intervention analysis is implied by this release.
+The extension includes competing mortality and time-varying exposure. Remaining limitations include healthy-worker selection, uncertain historical exposure, informative censoring, time-varying confounding and unmeasured workplace frailty. The baseline reference retains its original assumptions. A real surveillance application requires a prespecified estimand, approved data access, clinically meaningful case definitions, appropriate dependence modelling and external validation. No spatial, Bayesian or causal intervention analysis is implied by this release.
 
 ## Sources and implementation
 

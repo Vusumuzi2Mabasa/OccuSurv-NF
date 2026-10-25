@@ -41,13 +41,31 @@ process FIGURES {
  ${params.python} ${script} ${analysis} --out figures
  """
 }
+process LONGITUDINAL {
+ publishDir "${params.outdir}", mode:'copy'
+ input: path clean; path script
+ output: path 'longitudinal'
+ script:
+ """
+ ${params.python} ${script} ${clean}/workers.csv --seed ${params.seed + 1} --out longitudinal
+ """
+}
+process LONGITUDINAL_FIGURES {
+ publishDir "${params.outdir}", mode:'copy'
+ input: path longitudinal; path script
+ output: path 'longitudinal_figures'
+ script:
+ """
+ ${params.python} ${script} ${longitudinal} --out longitudinal_figures
+ """
+}
 process REPORT {
  publishDir "${params.outdir}", mode:'copy'
- input: path analysis; path clean; path figures; path methods; path equations; path report_source
+ input: path analysis; path clean; path figures; path methods; path equations; path report_source; path longitudinal; path longitudinal_figures
  output: path 'report'
  script:
  """
- ${params.report_python} ${params.report_script} --analysis analysis --clean clean --figures figures --methods methods.json --equations equations --out report
+ ${params.report_python} ${params.report_script} --analysis analysis --clean clean --figures figures --methods methods.json --equations equations --out report --longitudinal longitudinal --longitudinal_figures longitudinal_figures
  """
 }
 workflow {
@@ -55,5 +73,7 @@ workflow {
  clean=QC(raw,file("${projectDir}/bin/qc.py"))
  analysis=ANALYSE(clean,raw,file("${projectDir}/bin/analyse.py"))
  figures=FIGURES(analysis,file("${projectDir}/bin/figures.py"))
- REPORT(analysis,clean,figures,file("${projectDir}/docs/methods.json"),file("${projectDir}/assets/equations"),file("${projectDir}/bin/report.py"))
+ longitudinal=LONGITUDINAL(clean,file("${projectDir}/bin/longitudinal.py"))
+ longitudinal_figures=LONGITUDINAL_FIGURES(longitudinal,file("${projectDir}/bin/longitudinal_figures.py"))
+ REPORT(analysis,clean,figures,file("${projectDir}/docs/methods.json"),file("${projectDir}/assets/equations"),file("${projectDir}/bin/report.py"),longitudinal,longitudinal_figures)
 }

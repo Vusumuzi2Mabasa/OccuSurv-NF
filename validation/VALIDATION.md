@@ -18,6 +18,16 @@ Validation date: 25 October 2026. All scientific inputs are synthetic.
 
 The standard `render_docx.py` was attempted and failed because the runtime had no LibreOffice executable. Word COM export provided the rendering fallback; the scientific Word deliverable remains a normal DOCX file. QA PDFs and page images remain local and are excluded from Git.
 
+## Version 0.2 extension validation — 25 October 2026
+
+The earlier five-process and eight-page records above describe version 0.1. The extended workflow completed all seven processes successfully (`extension_trace.tsv`). It generated a separate follow-up scenario for 477 workers, with 2743 start-stop intervals, 93 diagnoses, 83 competing deaths and 2603.3552 person-years. Both cause-specific models converged without warnings; maximum absolute scores were below 1e-12.
+
+The 40-worker smoke input produced 38 longitudinal subjects, 10 diagnoses and 5 deaths. Both regressions were explicitly skipped because their complete-case cause-specific event counts were below 30. All seven smoke processes completed (`extension_smoke_trace.tsv`). All seven full-run processes were then CACHED on resume (`extension_resume_trace.tsv`).
+
+The expanded suite passed all 26 tests (`extended_tests.txt`), including independent cumulative-incidence comparisons, probability conservation, start-stop partial likelihood and finite-difference score checks, and malformed interval fixtures. `verify_extension.py` passed for full and smoke outputs, checking hashes, interval QC, counts, person-time, probability mass, monotonicity, confidence bounds, regression gates and deliverable existence. Four new figures and the final 12-page Word report were rendered; every report page was visually inspected using the Word COM/Poppler fallback described above.
+
+This is one synthetic realisation and a small-data execution test, not a power, bias or coverage study. The 200-replicate worker bootstrap provides pointwise intervals under independent-worker assumptions. Neither Fine–Gray modelling nor remote HPC execution is claimed.
+
 ## Runtime details
 
 Nextflow 25.10.2 and OpenJDK 21.0.12.1 executed under Ubuntu 24.04 in WSL. A project-specific Python 3.13 environment at `/home/vusi/.venvs/occusurv-nf` contains the scientific dependencies listed in `python-lock.txt`. The complete workflow source, task work and outputs are on Toshiba at `D:/occusurv-nf` (`/mnt/toshiba/occusurv-nf` in the tested WSL session).

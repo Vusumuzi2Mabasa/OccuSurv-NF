@@ -48,5 +48,25 @@
     "id": "residual",
     "latex": "r_i=x_i-\\frac{\\sum_{j\\in R(Y_i)}x_j\\exp(x_j^T\\hat\\beta)}{\\sum_{j\\in R(Y_i)}\\exp(x_j^T\\hat\\beta)}",
     "explanation": "Schoenfeld residuals at event times are plotted against log time with LOWESS smoothing. Spearman correlations are descriptive only. These diagnostics are not a formal global proportional-hazards test and do not establish that proportional hazards holds."
+  },
+  {
+    "id": "tv_exposure",
+    "latex": "C_i(k)=c_i\\max[d_i-\\max(5-k,0),0]+\\sum_{m=0}^{k-6} e_{im}",
+    "explanation": "At integer year k, ci and di are baseline historical concentration and employment duration; eim is the concentration during post-baseline year m, integrated over one year. An empty sum is zero. This is the exposure integral up to k minus five years. It is held constant on each annual risk interval and includes no future exposure."
+  },
+  {
+    "id": "tv_hazard",
+    "latex": "h_{ij}(t)=\\lambda_{0j}\\exp\\{\\beta_{jx}\\log_2[1+C_i(k)/C_0]+\\beta_{ja}a_i+\\beta_{js}s_i\\}",
+    "explanation": "For k < t <= k+1, j=1 is diagnosis and j=2 is competing death. The baseline rates are 0.018 and 0.025 per year. Disease HRs are 1.7, 1.3 and 1.5; death HRs are 1.0, 1.5 and 1.2. All are simulation assumptions. Age is baseline age per decade and smoking is fixed."
+  },
+  {
+    "id": "tv_risk",
+    "latex": "R(t)=\\{(i,k):\\mathrm{start}_{ik}<t\\leq\\mathrm{stop}_{ik}\\}",
+    "explanation": "Each subject contributes at most one row to the risk set at an event time. Cause-specific Cox likelihood uses the covariates on that active row, and removes either first diagnosis or death thereafter. Other causes contribute a zero cause-specific event indicator. This estimates a cause-specific hazard, not an absolute risk or a Fine-Gray subdistribution hazard."
+  },
+  {
+    "id": "aj",
+    "latex": "\\hat F_j(t)=\\sum_{u\\leq t}\\hat S(u-)\\frac{d_j(u)}{n(u)},\\quad \\hat S(t)=\\prod_{u\\leq t}\\left[1-\\frac{d_1(u)+d_2(u)}{n(u)}\\right]",
+    "explanation": "Aalen-Johansen cumulative incidence integrates the cause-specific event fraction against survival free of either event. F1+F2+S=1. Disease probability is not one minus Kaplan-Meier when deaths preclude diagnosis. Confidence limits are pointwise percentile intervals from 200 whole-worker bootstrap samples within each reported group; they are not simultaneous bands or cluster-robust intervals."
   }
 ]

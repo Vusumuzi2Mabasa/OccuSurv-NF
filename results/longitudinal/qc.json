@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "subjects": 477,
+  "intervals": 2743,
+  "disease": 93,
+  "deaths": 83,
+  "censored": 301,
+  "person_years": 2603.35523619287,
+  "model_complete_subjects": 462,
+  "checks": [
+    "IDs",
+    "finite values",
+    "event codes",
+    "positive nonoverlapping contiguous intervals",
+    "terminal first-event matching",
+    "annual history",
+    "monotone exposure",
+    "covariate schedule agreement"
+  ],
+  "sha256": {
+    "history.csv": "bd46ff0f518c622f5373eebfb084fb3db09141fcf0c4432457d18f444621b18c",
+    "intervals.csv": "b57ff2edbc0592b5e1bf76d6882c065a72cf2b754dc3fd36cc97f9393e5e4cf5",
+    "subjects.csv": "b8faead724a90d43b1d10cef01eefcdcda772cfb921693eaaa89d13fc4ed99a6",
+    "truth.json": "93b14d5931241710929f7388e84830166d58d229ff792bb44eff9d930c47b438"
+  }
+}

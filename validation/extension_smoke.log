@@ -1,0 +1,10 @@
+[33mNextflow 26.10.3 is available - Please consider updating your version to it(B[m
+N E X T F L O W  ~  version 25.10.2
+Launching `main.nf` [big_sax] DSL2 - revision: 1984206304
+[73/5d50c8] Submitted process > SIMULATE
+[83/fb2bf1] Submitted process > QC
+[2e/700bb6] Submitted process > LONGITUDINAL
+[88/1609bb] Submitted process > ANALYSE
+[ad/557730] Submitted process > LONGITUDINAL_FIGURES
+[05/6f0d8f] Submitted process > FIGURES
+[78/15d321] Submitted process > REPORT

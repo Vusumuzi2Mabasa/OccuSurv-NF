@@ -21,4 +21,16 @@ README.md. Tools/environments were not added to system PATH or committed.
 
 The Word report contains rendered equations; the mathematical source is in
 docs/methods.json and docs/METHODS.md. Figure code and report code are versioned.
-HPC execution is not tested. No remote cluster jobs or GitHub pushes performed.
+HPC execution is not tested. No remote cluster jobs were submitted.
+
+VERSION 0.2 LONGITUDINAL EXTENSION
+The same main.nf command also runs annual exposure simulation, start-stop QC,
+time-varying cause-specific Cox models and Aalen-Johansen cumulative incidence.
+The independent follow-up scenario uses seed + 1 and does not replace baseline
+outcomes. Results are in longitudinal/ and longitudinal_figures/ under outdir.
+Both causes require 30 complete-case events before regression is fitted.
+The smoke profile explicitly exercises skipped regressions. The Word report
+includes both scenarios. Equations and assumptions are in docs/METHODS.md.
+Verify extension outputs with:
+python validation/verify_extension.py results
+python validation/verify_extension.py results-smoke

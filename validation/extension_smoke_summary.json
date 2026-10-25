@@ -1,0 +1,31 @@
+{
+  "scenario": "longitudinal competing events",
+  "seed": 2027,
+  "subjects": 38,
+  "intervals": 209,
+  "disease": 10,
+  "deaths": 5,
+  "censored": 23,
+  "person_years": 197.30143321137186,
+  "model_complete_subjects": 37,
+  "models": [
+    {
+      "cause": 1,
+      "events": 10,
+      "subjects": 37,
+      "intervals": 204,
+      "status": "skipped",
+      "reason": "fewer than 30 cause-specific events"
+    },
+    {
+      "cause": 2,
+      "events": 4,
+      "subjects": 37,
+      "intervals": 204,
+      "status": "skipped",
+      "reason": "fewer than 30 cause-specific events"
+    }
+  ],
+  "bootstrap_replicates": 200,
+  "worker_sampling": "iid within each displayed group; no residual workplace frailty assumed"
+}
